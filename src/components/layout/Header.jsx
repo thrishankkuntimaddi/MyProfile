@@ -1,4 +1,4 @@
-import { RotateCcw, Lock } from 'lucide-react'
+import { RotateCcw, Lock, Share2 } from 'lucide-react'
 
 const SECTION_LABELS = {
   experience: 'Experience',
@@ -9,7 +9,7 @@ const SECTION_LABELS = {
   overview:   'Profile',
 }
 
-export function Header({ view, onBack, onHome, onReset, onLock }) {
+export function Header({ view, onBack, onHome, onReset, onLock, onShare }) {
   const atHome    = view.level === 0
   const atSection = view.level === 1
   const atDetail  = view.level === 2
@@ -70,8 +70,11 @@ export function Header({ view, onBack, onHome, onReset, onLock }) {
       {/* Right: actions */}
       <div className="header-actions">
         {!atHome && (
-          <button className="btn-icon" onClick={onBack} title="Back">
-            ←
+          <button className="btn-icon" onClick={onBack} title="Back">←</button>
+        )}
+        {onShare && (
+          <button className="btn-icon" onClick={onShare} title="Share profile">
+            <Share2 size={13} />
           </button>
         )}
         {onLock && (

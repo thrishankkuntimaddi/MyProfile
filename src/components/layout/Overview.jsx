@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Pencil } from 'lucide-react'
 
 const SECTION_META = {
   experience: { label: 'Experience' },
@@ -8,7 +8,7 @@ const SECTION_META = {
   links:      { label: 'Links' },
 }
 
-export function Overview({ profile, onOpenSection }) {
+export function Overview({ profile, onOpenSection, onEditProfile }) {
   const p = profile?.profile || {}
   const initials = p.name
     ? p.name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase()
@@ -49,7 +49,7 @@ export function Overview({ profile, onOpenSection }) {
         {/* Identity block */}
         <div className="identity-block">
           <div className="identity-avatar">{initials}</div>
-          <div>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <h1 className="identity-name">{p.name || 'Your Profile'}</h1>
             {p.title && <div className="identity-role">{p.title}</div>}
             {(p.location || p.email) && (
@@ -58,6 +58,11 @@ export function Overview({ profile, onOpenSection }) {
               </div>
             )}
           </div>
+          {onEditProfile && (
+            <button className="identity-edit-btn" onClick={onEditProfile} title="Edit profile">
+              <Pencil size={13} />
+            </button>
+          )}
         </div>
 
         {/* Summary */}

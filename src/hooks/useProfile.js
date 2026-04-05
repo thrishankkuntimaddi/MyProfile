@@ -26,17 +26,14 @@ export function useProfile() {
     setProfileState(null)
   }, [])
 
-  const updateSection = useCallback((section, value) => {
-    setProfileState((prev) => {
-      const updated = { ...prev, [section]: value }
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
-      } catch (e) {
-        console.error('Failed to update section:', e)
-      }
-      return updated
-    })
+  const updateProfile = useCallback((newData) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newData))
+      setProfileState(newData)
+    } catch (e) {
+      console.error('Failed to update profile:', e)
+    }
   }, [])
 
-  return { profile, saveProfile, clearProfile, updateSection }
+  return { profile, saveProfile, clearProfile, updateSection, updateProfile }
 }

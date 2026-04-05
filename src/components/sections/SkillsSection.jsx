@@ -1,9 +1,17 @@
-export function SkillsSection({ skills = [] }) {
+import { Pencil } from 'lucide-react'
+
+export function SkillsSection({ skills = [], onEdit }) {
   return (
     <>
-      <div className="section-heading">Skills</div>
+      <div className="section-heading-row">
+        <div className="section-heading">Skills</div>
+        <button className="btn-add" onClick={onEdit} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Pencil size={12} /> Edit
+        </button>
+      </div>
+
       {skills.length === 0 ? (
-        <div className="empty-state">No skills added.</div>
+        <div className="empty-state">No skills added. <button className="link-btn" onClick={onEdit}>Add skills →</button></div>
       ) : (
         <div className="skills-section-groups">
           {skills.map((group, i) => (
