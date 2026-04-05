@@ -1,4 +1,4 @@
-import { RotateCcw, Lock, Share2 } from 'lucide-react'
+import { RotateCcw, Lock, LockOpen, Share2 } from 'lucide-react'
 
 const SECTION_LABELS = {
   experience: 'Experience',
@@ -9,7 +9,7 @@ const SECTION_LABELS = {
   overview:   'Profile',
 }
 
-export function Header({ view, onBack, onHome, onReset, onLock, onShare }) {
+export function Header({ view, hasPassword, onBack, onHome, onReset, onLock, onShare }) {
   const atHome    = view.level === 0
   const atSection = view.level === 1
   const atDetail  = view.level === 2
@@ -78,8 +78,13 @@ export function Header({ view, onBack, onHome, onReset, onLock, onShare }) {
           </button>
         )}
         {onLock && (
-          <button className="btn-icon" onClick={onLock} title="Lock">
-            <Lock size={13} />
+          <button
+            className="btn-icon"
+            onClick={onLock}
+            title={hasPassword ? 'Lock / Manage password' : 'Set password'}
+            style={{ color: hasPassword ? 'var(--accent)' : 'var(--text-muted)' }}
+          >
+            {hasPassword ? <Lock size={13} /> : <LockOpen size={13} />}
           </button>
         )}
         <button className="btn-icon" onClick={onReset} title="Reset data">
