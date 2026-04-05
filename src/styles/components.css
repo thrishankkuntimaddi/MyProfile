@@ -1,15 +1,13 @@
 /* ── Dashboard Cards (Level 0) ── */
 .dash-card {
   background: var(--bg-surface);
-  padding: var(--sp-5) var(--sp-6);
+  padding: var(--sp-5) var(--sp-5);
   cursor: pointer;
-  position: relative;
   display: flex;
   flex-direction: column;
   transition: background var(--transition), border-left-color var(--transition);
   overflow: hidden;
   min-height: 0;
-  max-height: 100%;
   border-left: 2px solid transparent;
 }
 
@@ -25,52 +23,33 @@
   text-transform: uppercase;
   color: var(--text-muted);
   flex-shrink: 0;
-  margin-bottom: var(--sp-3);
+  margin-bottom: var(--sp-4);
 }
 
-.dash-card__title {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-primary);
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.dash-card__preview {
+/* Body: fills all available height between label and footer */
+.dash-card__body {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
   min-height: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.dash-card__preview-line {
-  font-size: 12px;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Footer row: count left, arrow right */
+/* Footer: count + arrow pinned to bottom */
 .dash-card__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: var(--sp-4);
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--border-subtle);
   flex-shrink: 0;
 }
 
 .dash-card__count {
   font-size: 10px;
   color: var(--text-muted);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
 }
 
 .dash-card__arrow {
@@ -81,6 +60,154 @@
 .dash-card:hover .dash-card__arrow {
   color: var(--accent);
   transform: translate(2px, -2px);
+}
+
+/* ── Card internal atoms ── */
+
+/* Profile hero row (monogram + name + title) */
+.card-profile-hero {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+  flex-shrink: 0;
+}
+
+.monogram {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  background: var(--bg-active);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.card-profile-info {
+  min-width: 0;
+}
+
+.card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-subtitle {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.card-summary {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-top: var(--sp-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Generic list for experience / education / projects / links */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.card-list-item {
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.card-list-item:last-child {
+  border-bottom: none;
+}
+
+.card-list-item__primary {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-list-item__secondary {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-list-item__meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+/* Skills tag cloud */
+.card-skills {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.card-skill-group {
+  flex-shrink: 0;
+}
+
+.card-skill-group__label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-2);
+}
+
+.card-skill-group__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Empty state for card */
+.card-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: var(--sp-2) 0;
 }
 
 

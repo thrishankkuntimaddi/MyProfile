@@ -14,7 +14,7 @@ export function DashCard({ label, children, count, onClick }) {
       onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
     >
       <div className="dash-card__label">{label}</div>
-      <div className="dash-card__preview">{children}</div>
+      <div className="dash-card__body">{children}</div>
       <div className="dash-card__footer">
         {countLabel && <span className="dash-card__count">{countLabel}</span>}
         <ArrowUpRight size={13} className="dash-card__arrow" />
