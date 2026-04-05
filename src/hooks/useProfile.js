@@ -35,5 +35,6 @@ export function useProfile() {
     }
   }, [])
 
-  return { profile, saveProfile, clearProfile, updateSection, updateProfile }
+  return { profile, saveProfile, clearProfile, updateProfile }
+
 }
