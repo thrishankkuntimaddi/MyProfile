@@ -121,52 +121,52 @@
   z-index: 300;
 }
 
-/* ── Mobile tab bar — always hidden on desktop ── */
-.mobile-tab-bar {
-  display: none;
-}
+/* ── Mobile tab bar — desktop hidden ── */
+.mobile-tab-bar { display: none; }
 
-/* ────────────────────────────────────────────────
-   MOBILE  ≤ 640px
-   ──────────────────────────────────────────────── */
+/* ════════════════════════════════════════════
+   MOBILE ≤ 640px
+   ════════════════════════════════════════════ */
 @media (max-width: 640px) {
 
-  /* Grid: row 1 = auto (collapses when header is 0), row 3 = 0 */
+  /* Switch to flex column — simpler, more reliable than grid for mobile */
   .app-layout {
-    grid-template-rows: auto 1fr 0px;
-  }
-
-  /* Footer: zero-height but in grid so layout stays intact */
-  .app-footer {
-    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
     overflow: hidden;
-    height: 0;
-    min-height: 0;
-    padding: 0;
-    border: none;
   }
 
-  /* Collapse header on home — hides 'MyProfile' label below browser URL bar */
-  .app-header--home {
-    height: 0;
-    min-height: 0;
-    overflow: hidden;
-    padding: 0;
-    border-bottom-width: 0;
-  }
-
-  /* Header: compact on mobile */
+  /* Header — shown only when navigating (not at home) */
   .app-header {
+    flex-shrink: 0;
     padding: 0 16px;
     height: var(--header-h);
   }
 
-  /* Content padding — account for fixed tab bar at bottom */
-  .overview-content  { padding: 20px 18px 84px; }
-  .section-content   { padding: 16px 18px 84px; }
-  .detail-content    { padding: 16px 18px 84px; }
+  /* Collapse header completely on home screen */
+  .app-header--home {
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    border-bottom: none !important;
+    flex-shrink: 0;
+  }
 
-  /* ── Tab bar: FIXED at bottom, not a grid item ── */
+  /* Content fills remaining space */
+  .app-content {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Footer: hidden on mobile */
+  .app-footer {
+    display: none;
+  }
+
+  /* ── Tab bar: fixed at bottom ── */
   .mobile-tab-bar {
     display: flex;
     align-items: stretch;
@@ -174,13 +174,13 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 64px;
-    background: rgba(14, 14, 14, 0.97);
+    height: 60px;
+    background: rgba(12, 12, 12, 0.98);
     border-top: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    z-index: 999;
+    z-index: 500;
   }
 
   .tab-btn {
@@ -189,14 +189,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 3px;
     border: none;
     background: none;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.35);
     font-family: var(--font);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
     transition: color 100ms ease;
@@ -205,31 +205,51 @@
     position: relative;
   }
 
-  .tab-btn:active { opacity: 0.5; }
+  .tab-btn:active { opacity: 0.4; }
   .tab-btn--active { color: #ffffff; }
 
-  /* Amber line at top of active tab */
+  /* Amber indicator line at top of active tab */
   .tab-btn--active::before {
     content: '';
     position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 32px;
+    width: 28px;
     height: 2px;
     background: #b8956a;
     border-radius: 0 0 3px 3px;
   }
 
-  /* Modals sit above fixed tab bar */
-  .edit-overlay { z-index: 1000; }
+  /* Content padding — scroll clears fixed tab bar */
+  .overview-content { padding: 20px 16px 80px; }
+  .section-content  { padding: 16px 16px 80px; }
+  .detail-content   { padding: 16px 16px 80px; }
 
-  /* Back button */
-  .mobile-back-btn {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    color: var(--text-primary);
+  /* ── Modals: full-screen on mobile ── */
+  .edit-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 600;
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .edit-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92vh;
+    border-radius: 16px 16px 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    overflow-y: auto;
+  }
+
+  /* Share modal same treatment */
+  .share-modal-sized {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
   }
 }

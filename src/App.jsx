@@ -119,8 +119,9 @@ export default function App() {
     updateProfile({ ...profile, [section]: profile[section].filter((_, i) => i !== index) })
   }
 
-  // ── Lock click: open password modal ─────────────────────────────────────────
+  // ── Lock click: open password modal (close share first) ────────────────────
   function handleLockClick() {
+    setShareOpen(false)
     setLockModalOpen(true)
   }
 
@@ -236,7 +237,7 @@ export default function App() {
         onHome={handleHome}
         onReset={() => { if (window.confirm('Reset all data? This cannot be undone.')) clearAll() }}
         onLock={handleLockClick}
-        onShare={() => setShareOpen(true)}
+        onShare={() => { setLockModalOpen(false); setShareOpen(true) }}
       />
 
       <main className="app-content">
@@ -276,7 +277,7 @@ export default function App() {
       <MobileTabBar
         view={view}
         onHome={handleHome}
-        onShare={() => setShareOpen(true)}
+        onShare={() => { setLockModalOpen(false); setShareOpen(true) }}
         onSettings={handleLockClick}
       />
 
