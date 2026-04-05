@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { X, Copy, Check, QrCode } from 'lucide-react'
+import { X, Copy, Check, QrCode, Link2 } from 'lucide-react'
 import QRCode from 'qrcode'
 import LZString from 'lz-string'
 
-// Compress profile into a short-ish URL component
 function encodeProfile(profile) {
   try {
     return LZString.compressToEncodedURIComponent(JSON.stringify(profile))
@@ -12,38 +11,43 @@ function encodeProfile(profile) {
   }
 }
 
-// Always use the deployed (GitHub Pages) URL as the base if possible,
-// otherwise fall back to current origin+path
-function getShareUrl(profile) {
-  const encoded = encodeProfile(profile)
-  if (!encoded) return window.location.href
-
-  // On GitHub Pages the pathname starts with /MyProfile/
-  const base = window.location.hostname === 'localhost'
+// The QR always points to the clean deployed URL (always short → always scannable)
+// The copy button gives the full profile-encoded URL (for exact data transfer)
+function getUrls(profile) {
+  const isLocal  = window.location.hostname === 'localhost'
+  const baseUrl  = isLocal
     ? 'https://thrishankkuntimaddi.github.io/MyProfile/'
     : `${window.location.origin}${window.location.pathname}`
 
-  return `${base}#share=${encoded}`
+  const encoded  = encodeProfile(profile)
+  const shareUrl = encoded ? `${baseUrl}#share=${encoded}` : baseUrl
+
+  return { qrUrl: baseUrl, shareUrl }
 }
 
 export function ShareModal({ profile, onClose }) {
-  const [copied, setCopied] = useState(false)
+  const [copied,   setCopied]   = useState(false)
+  const [qrError,  setQrError]  = useState(false)
   const canvasRef = useRef(null)
 
-  const shareUrl = getShareUrl(profile)
+  const { qrUrl, shareUrl } = getUrls(profile)
 
-  // Draw QR code onto canvas
   useEffect(() => {
     if (!canvasRef.current) return
-    QRCode.toCanvas(canvasRef.current, shareUrl, {
+    setQrError(false)
+    QRCode.toCanvas(canvasRef.current, qrUrl, {
       width: 200,
       margin: 2,
+      errorCorrectionLevel: 'M',
       color: {
-        dark: '#b8956a',   // accent colour
-        light: '#111111',  // card bg
+        dark:  '#b8956a',
+        light: '#111111',
       },
-    }).catch(console.error)
-  }, [shareUrl])
+    }).catch((err) => {
+      console.error('QR generation failed:', err)
+      setQrError(true)
+    })
+  }, [qrUrl])
 
   function handleCopy() {
     navigator.clipboard.writeText(shareUrl).then(() => {
@@ -56,6 +60,7 @@ export function ShareModal({ profile, onClose }) {
     <div className="edit-overlay" onClick={onClose}>
       <div className="edit-modal share-modal-sized" onClick={(e) => e.stopPropagation()}>
 
+        {/* Header */}
         <div className="edit-modal__header">
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <QrCode size={14} style={{ color: 'var(--accent)' }} />
@@ -64,19 +69,36 @@ export function ShareModal({ profile, onClose }) {
           <button className="btn-icon" onClick={onClose}><X size={15} /></button>
         </div>
 
+        {/* Body */}
         <div className="edit-modal__body share-modal-body">
 
-          {/* QR Code canvas */}
+          {/* QR Code */}
           <div className="share-qr">
-            <canvas ref={canvasRef} style={{ display: 'block' }} />
+            {qrError ? (
+              <div className="share-qr-error">
+                <QrCode size={32} style={{ opacity: 0.3 }} />
+                <span>QR unavailable</span>
+              </div>
+            ) : (
+              <canvas ref={canvasRef} style={{ display: 'block' }} />
+            )}
+          </div>
+
+          {/* QR label */}
+          <p className="share-qr-label">
+            Scan to open your profile →
+          </p>
+
+          {/* Divider */}
+          <div className="share-divider">
+            <span>or copy link with profile data</span>
           </div>
 
           {/* URL row */}
           <div className="share-url-row">
+            <Link2 size={11} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
             <span className="share-url-text">
-              {window.location.hostname === 'localhost'
-                ? 'QR points to GitHub Pages (deploy first)'
-                : shareUrl.slice(0, 56) + (shareUrl.length > 56 ? '…' : '')}
+              {shareUrl.slice(0, 52)}{shareUrl.length > 52 ? '…' : ''}
             </span>
             <button className="btn-copy" onClick={handleCopy}>
               {copied ? <Check size={13} /> : <Copy size={13} />}
@@ -85,17 +107,16 @@ export function ShareModal({ profile, onClose }) {
           </div>
 
           <p className="share-note">
-            Scan to open your profile instantly.
-            Data is encoded in the URL — no server, no login needed.
+            Profile data is encoded in the link — no server needed.
           </p>
         </div>
 
+        {/* Footer */}
         <div className="edit-modal__footer">
           <button className="btn-ghost" style={{ marginLeft: 'auto' }} onClick={onClose}>
             Close
           </button>
         </div>
-
       </div>
     </div>
   )
