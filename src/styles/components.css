@@ -1,34 +1,31 @@
 /* ── Dashboard Cards (Level 0) ── */
 .dash-card {
   background: var(--bg-surface);
-  padding: var(--sp-6);
+  padding: var(--sp-5) var(--sp-6);
   cursor: pointer;
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
-  transition: background var(--transition);
+  transition: background var(--transition), border-left-color var(--transition);
   overflow: hidden;
   min-height: 0;
   max-height: 100%;
+  border-left: 2px solid transparent;
 }
 
 .dash-card:hover {
   background: var(--bg-hover);
-}
-
-.dash-card:hover .dash-card__arrow {
-  opacity: 1;
-  transform: translateX(0);
+  border-left-color: var(--border-accent);
 }
 
 .dash-card__label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
   flex-shrink: 0;
+  margin-bottom: var(--sp-3);
 }
 
 .dash-card__title {
@@ -36,14 +33,13 @@
   font-weight: 500;
   color: var(--text-primary);
   line-height: 1.3;
-  /* Max 2 lines */
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex-shrink: 0;
 }
-
 
 .dash-card__preview {
   flex: 1;
@@ -51,32 +47,42 @@
   flex-direction: column;
   gap: var(--sp-2);
   min-height: 0;
+  overflow: hidden;
 }
 
 .dash-card__preview-line {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* Footer row: count left, arrow right */
+.dash-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--sp-4);
+  flex-shrink: 0;
+}
+
 .dash-card__count {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-muted);
-  margin-top: auto;
-  padding-top: var(--sp-2);
+  letter-spacing: 0.03em;
 }
 
 .dash-card__arrow {
-  position: absolute;
-  bottom: var(--sp-5);
-  right: var(--sp-5);
-  color: var(--accent);
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: opacity var(--transition), transform var(--transition);
+  color: var(--text-muted);
+  transition: color var(--transition), transform var(--transition);
 }
+
+.dash-card:hover .dash-card__arrow {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
 
 /* ── Section Label ── */
 .section-label {

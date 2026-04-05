@@ -198,20 +198,31 @@ function parseSkills(block) {
   let current = null
 
   for (const line of ls) {
-    // Detect category (short line ending with : or all caps)
-    if (line.endsWith(':') || (line.length < 30 && /^[A-Z]/.test(line) && !line.includes(','))) {
-      if (current) categories.push(current)
-      current = { category: line.replace(':', '').trim(), items: [] }
-    } else if (line.includes(',')) {
-      const skills = line.split(',').map(clean).filter(Boolean)
-      if (current) {
-        current.items.push(...skills)
-      } else {
-        // No category label — create generic one
-        if (!current) current = { category: 'Skills', items: [] }
-        current.items.push(...skills)
+    // Pattern: "Category: item1, item2, item3"
+    const colonIdx = line.indexOf(':')
+    if (colonIdx > 0 && colonIdx < 30) {
+      const potentialCat = line.slice(0, colonIdx).trim()
+      const rest = line.slice(colonIdx + 1).trim()
+
+      // Looks like a category: short label before colon, items after
+      if (potentialCat.length < 25 && rest.length > 0) {
+        if (current && current.items.length > 0) categories.push(current)
+        const items = rest.split(',').map(clean).filter(Boolean)
+        categories.push({ category: potentialCat, items })
+        current = null
+        continue
       }
-    } else if (line.length < 40) {
+    }
+
+    // Pure category header line (ends with : or short all-caps with no commas)
+    if (line.endsWith(':') || (line.length < 30 && /^[A-Z]/.test(line) && !line.includes(','))) {
+      if (current && current.items.length > 0) categories.push(current)
+      current = { category: line.replace(/:$/, '').trim(), items: [] }
+    } else if (line.includes(',')) {
+      const items = line.split(',').map(clean).filter(Boolean)
+      if (!current) current = { category: 'Skills', items: [] }
+      current.items.push(...items)
+    } else if (line.length > 0 && line.length < 40) {
       if (!current) current = { category: 'Skills', items: [] }
       current.items.push(clean(line))
     }
@@ -219,21 +230,20 @@ function parseSkills(block) {
 
   if (current && current.items.length > 0) categories.push(current)
 
-  // Fallback: if nothing parsed, dump all words as a flat list
+  // Fallback: tokenise everything as a flat "Skills" group
   if (categories.length === 0) {
     const allWords = block
       .split(/[\n,•·|]/)
       .map(clean)
       .filter((s) => s.length > 1 && s.length < 30)
-    if (allWords.length > 0) {
-      categories.push({ category: 'Skills', items: allWords })
-    }
+    if (allWords.length > 0) categories.push({ category: 'Skills', items: allWords })
   }
 
   return categories
 }
 
 // ── Projects parsing ──────────────────────────────────────────────────────────
+
 
 function parseProjects(block) {
   const ls = lines(block)
