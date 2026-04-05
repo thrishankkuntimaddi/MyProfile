@@ -20,7 +20,7 @@ export function Header({ view, hasPassword, onBack, onHome, onReset, onLock, onS
     : ''
 
   return (
-    <header className={`app-header${atHome ? ' app-header--home' : ''}`}>
+    <header className="app-header">
       {/* Left: breadcrumb */}
       <nav className="header-breadcrumb">
         {atHome ? (
