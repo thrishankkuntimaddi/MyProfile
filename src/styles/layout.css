@@ -131,18 +131,28 @@
    ──────────────────────────────────────────────── */
 @media (max-width: 640px) {
 
-  /* Grid stays 3-row, footer row shrinks to 0 */
+  /* Grid: row 1 = auto (collapses when header is 0), row 3 = 0 */
   .app-layout {
-    grid-template-rows: var(--header-h) 1fr 0px;
+    grid-template-rows: auto 1fr 0px;
   }
 
-  /* Footer: invisible but still in grid (prevents layout collapse) */
+  /* Footer: zero-height but in grid so layout stays intact */
   .app-footer {
     visibility: hidden;
     overflow: hidden;
     height: 0;
+    min-height: 0;
     padding: 0;
     border: none;
+  }
+
+  /* Collapse header on home — hides 'MyProfile' label below browser URL bar */
+  .app-header--home {
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0;
+    border-bottom-width: 0;
   }
 
   /* Header: compact on mobile */
