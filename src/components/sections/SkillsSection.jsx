@@ -1,39 +1,25 @@
-import { SectionLabel } from '../shared/SectionLabel'
-import { TagList } from '../shared/TagList'
-import { EmptyState } from '../shared/EmptyState'
-
 export function SkillsSection({ skills = [] }) {
-  if (!skills.length) {
-    return (
-      <div className="section-inner anim-expand">
-        <SectionLabel>Skills</SectionLabel>
-        <EmptyState message="No skills found" />
-      </div>
-    )
-  }
-
   return (
-    <div className="section-inner anim-expand">
-      <SectionLabel>Skills</SectionLabel>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-6)' }}>
-        {skills.map((group, i) => (
-          <div key={i}>
-            {group.category && (
-              <div style={{
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: 'var(--text-muted)',
-                marginBottom: 'var(--sp-3)'
-              }}>
-                {group.category}
+    <>
+      <div className="section-heading">Skills</div>
+      {skills.length === 0 ? (
+        <div className="empty-state">No skills added.</div>
+      ) : (
+        <div className="skills-section-groups">
+          {skills.map((group, i) => (
+            <div key={i} className="skill-group">
+              {group.category && (
+                <div className="skill-group__label">{group.category}</div>
+              )}
+              <div className="skill-group__tags">
+                {group.items.map((item, j) => (
+                  <span key={j} className="tag">{item}</span>
+                ))}
               </div>
-            )}
-            <TagList items={group.items} />
-          </div>
-        ))}
-      </div>
-    </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
   )
 }

@@ -14,17 +14,17 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--sp-6);
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-subtle);
   background: var(--bg-base);
   position: relative;
-  z-index: 100;
+  z-index: 200;
   flex-shrink: 0;
 }
 
-/* Content area — full width, no scroll */
+/* Content area */
 .app-content {
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
   background: var(--bg-base);
 }
 
@@ -33,41 +33,66 @@
   display: flex;
   align-items: center;
   padding: 0 var(--sp-6);
-  border-top: 1px solid var(--border-default);
+  border-top: 1px solid var(--border-subtle);
   background: var(--bg-base);
   gap: var(--sp-4);
 }
 
-/* Dashboard grid (Level 0) */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 1px;
-  height: 100%;
-  width: 100%;
-  background: var(--border-subtle);
+/* ── Overview (Level 0) ── */
+.overview-wrap {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Section / Detail view full-screen overlay */
+.overview-content {
+  width: 100%;
+  max-width: 640px;
+  padding: var(--sp-10) var(--sp-6) var(--sp-10);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Section overlay (Level 1) ── */
 .section-overlay {
   position: absolute;
   inset: 0;
   background: var(--bg-base);
   z-index: 50;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.section-inner {
-  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--sp-8) var(--sp-10);
-  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.section-content {
   width: 100%;
-  margin: 0 auto;
+  max-width: 640px;
+  padding: var(--sp-8) var(--sp-6) var(--sp-10);
+}
+
+/* ── Detail overlay (Level 2) ── */
+.detail-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-base);
+  z-index: 100;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detail-content {
+  width: 100%;
+  max-width: 600px;
+  padding: var(--sp-8) var(--sp-6) var(--sp-10);
 }
 
 /* Onboarding / auth fullscreen */
@@ -78,5 +103,5 @@
   align-items: center;
   justify-content: center;
   background: var(--bg-base);
-  z-index: 200;
+  z-index: 300;
 }

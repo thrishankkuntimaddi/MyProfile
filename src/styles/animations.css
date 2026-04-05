@@ -1,54 +1,44 @@
-/* ── Expand animation (card → fullscreen) ── */
-@keyframes expandIn {
-  from {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
+/* ── Fade in (base) ─────────────────────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ── Overview entry ─────────────────────────────────────────────────── */
+@keyframes overviewIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fadeSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ── Section slides in (forward navigation) ────────────────────────── */
+@keyframes sectionIn {
+  0%   { opacity: 0;   transform: translateX(32px); background-color: transparent; }
+  40%  { opacity: 0.6;                               }
+  100% { opacity: 1;   transform: translateX(0);    }
 }
 
-.anim-expand {
-  animation: expandIn 200ms ease-out forwards;
+/* ── Section exits (back navigation) ───────────────────────────────── */
+@keyframes sectionOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(40px); }
 }
 
-.anim-fade {
-  animation: fadeIn 150ms ease forwards;
+/* ── Detail zooms in ────────────────────────────────────────────────── */
+@keyframes detailIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.anim-slide-up {
-  animation: slideUp 180ms ease forwards;
+/* ── Detail exits ───────────────────────────────────────────────────── */
+@keyframes detailOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(10px) scale(0.99); }
 }
 
-.anim-fade-slide {
-  animation: fadeSlideIn 160ms ease forwards;
-}
+/* ── Utility classes ────────────────────────────────────────────────── */
+.anim-fade    { animation: fadeIn 200ms ease forwards; }
+.anim-overview { animation: overviewIn 260ms ease forwards; }
+.anim-section-in  { animation: sectionIn 220ms cubic-bezier(0.16,1,0.3,1) forwards; }
+.anim-section-out { animation: sectionOut 160ms ease forwards; }
+.anim-detail-in   { animation: detailIn 240ms cubic-bezier(0.16,1,0.3,1) forwards; }
+.anim-detail-out  { animation: detailOut 140ms ease forwards; }

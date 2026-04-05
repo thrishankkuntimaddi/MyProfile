@@ -1,39 +1,33 @@
-import { SectionLabel } from '../shared/SectionLabel'
-import { EmptyState } from '../shared/EmptyState'
+import { ChevronRight } from 'lucide-react'
 
 export function EducationSection({ education = [], onSelect }) {
-  if (!education.length) {
-    return (
-      <div className="section-inner anim-expand">
-        <SectionLabel>Education</SectionLabel>
-        <EmptyState message="No education entries found" />
-      </div>
-    )
-  }
-
   return (
-    <div className="section-inner anim-expand">
-      <SectionLabel>Education</SectionLabel>
-      <div>
-        {education.map((item, i) => (
-          <div key={i} className="timeline-item" onClick={() => onSelect(item)}>
-            <div className="timeline-item__header">
-              <div>
-                <div className="timeline-item__title">{item.institution || 'Unknown Institution'}</div>
-                <div className="timeline-item__subtitle">
-                  {[item.degree, item.field].filter(Boolean).join(' · ')}
+    <>
+      <div className="section-heading">Education</div>
+      {education.length === 0 ? (
+        <div className="empty-state">No education added.</div>
+      ) : (
+        <div className="item-list">
+          {education.map((e, i) => (
+            <div key={i} className="item-row" onClick={() => onSelect(e)}>
+              <div className="item-row__body">
+                <div className="item-row__title">{e.institution}</div>
+                {(e.degree || e.field) && (
+                  <div className="item-row__sub">
+                    {[e.degree, e.field].filter(Boolean).join(' · ')}
+                  </div>
+                )}
+              </div>
+              {(e.start || e.end) && (
+                <div className="item-row__date">
+                  {e.start}{e.end ? `–${e.end}` : ''}
                 </div>
-              </div>
-              <div className="timeline-item__date">
-                {item.start}{item.end ? ` – ${item.end}` : ''}
-              </div>
+              )}
+              <ChevronRight size={13} className="item-row__arrow" />
             </div>
-            {item.gpa && (
-              <div className="timeline-item__desc">GPA: {item.gpa}</div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+          ))}
+        </div>
+      )}
+    </>
   )
 }
