@@ -1,4 +1,4 @@
-import { RotateCcw, Lock, LockOpen, Share2 } from 'lucide-react'
+import { RotateCcw, Lock, LockOpen, Share2, ChevronLeft } from 'lucide-react'
 
 const SECTION_LABELS = {
   experience: 'Experience',
@@ -20,17 +20,14 @@ export function Header({ view, hasPassword, onBack, onHome, onReset, onLock, onS
     : ''
 
   return (
-    <header className="app-header">
+    <header className={`app-header ${atHome ? 'app-header--home' : ''}`}>
       {/* Left: breadcrumb */}
       <nav className="header-breadcrumb">
         {atHome ? (
           <span className="header-brand">MyProfile</span>
         ) : (
           <>
-            <button
-              className="header-breadcrumb__back header-brand"
-              onClick={onHome}
-            >
+            <button className="header-breadcrumb__back header-brand" onClick={onHome}>
               MyProfile
             </button>
             {sectionLabel && (
@@ -53,11 +50,8 @@ export function Header({ view, hasPassword, onBack, onHome, onReset, onLock, onS
               <>
                 <span className="header-breadcrumb__sep">/</span>
                 <span className="header-breadcrumb__active" style={{
-                  maxWidth: 200,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  display: 'inline-block',
+                  maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap', display: 'inline-block',
                 }}>
                   {itemLabel}
                 </span>
@@ -69,11 +63,13 @@ export function Header({ view, hasPassword, onBack, onHome, onReset, onLock, onS
 
       {/* Right: actions */}
       <div className="header-actions">
-        {/* Back button — shown on all screen sizes when not at home */}
+        {/* Back — mobile shows chevron when in section/detail */}
         {!atHome && (
-          <button className="btn-icon" onClick={onBack} title="Back">←</button>
+          <button className="btn-icon mobile-back-btn" onClick={onBack} title="Back">
+            <ChevronLeft size={20} />
+          </button>
         )}
-        {/* Share / Lock / Reset — desktop only; tab bar handles mobile */}
+        {/* Desktop share/lock/reset */}
         <div className="header-actions-desktop">
           {onShare && (
             <button className="btn-icon" onClick={onShare} title="Share profile">

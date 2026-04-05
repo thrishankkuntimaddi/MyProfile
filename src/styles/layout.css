@@ -126,26 +126,58 @@
   display: none; /* hidden on desktop */
 }
 
+/* ────────────────────────────────────────────────
+   MOBILE  ≤ 640px
+   ──────────────────────────────────────────────── */
 @media (max-width: 640px) {
 
-  /* Shrink grid footer row to match tab bar */
+  /* ── 1. Grid: header collapses on home, tab bar 72px ── */
   .app-layout {
-    grid-template-rows: var(--header-h) 1fr 68px;
+    /* When at home, header is hidden → var collapses via class below */
+    grid-template-rows: var(--header-h) 1fr 72px;
   }
 
-  /* Hide desktop footer text on mobile */
-  .app-footer {
+  /* Hide the header entirely on the home screen — tab bar is navigation */
+  .app-header--home {
     display: none;
   }
 
-  /* Show tab bar */
+  /* When header hidden, let content fill the freed space */
+  .app-layout:has(.app-header--home) {
+    grid-template-rows: 0 1fr 72px;
+  }
+
+  /* Safari fallback (no :has support) — just make header tiny */
+  .app-header {
+    padding: 0 14px;
+    min-height: 38px;
+    height: 38px;
+  }
+
+  /* The override for home: zero height */
+  .app-header--home {
+    height: 0;
+    overflow: hidden;
+    border: none;
+    padding: 0;
+    min-height: 0;
+  }
+
+  /* ── 2. Hide desktop footer ── */
+  .app-footer { display: none; }
+
+  /* ── 3. Content padding ── */
+  .overview-content  { padding: 20px 18px 20px; }
+  .section-content   { padding: 16px 18px 20px; }
+  .detail-content    { padding: 16px 18px 20px; }
+
+  /* ── 4. Tab bar ── */
   .mobile-tab-bar {
     display: flex;
     align-items: stretch;
-    background: #0c0c0c;
-    border-top: 1px solid rgba(255,255,255,0.09);
-    padding-bottom: env(safe-area-inset-bottom);
-    z-index: 200;
+    background: #111111;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: env(safe-area-inset-bottom, 4px);
   }
 
   .tab-btn {
@@ -154,56 +186,50 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    padding: 10px 4px 8px;
+    gap: 4px;
+    padding: 8px 4px 6px;
     border: none;
     background: none;
-    color: rgba(255,255,255,0.32);
+    color: rgba(255,255,255,0.3);
     font-family: var(--font);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: color 120ms ease;
+    transition: color 100ms ease;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     position: relative;
   }
 
-  .tab-btn:active { opacity: 0.65; }
+  /* SVG icon colour inherits */
+  .tab-btn svg { color: inherit; }
 
-  .tab-btn--active {
-    color: var(--text-primary);
-  }
+  .tab-btn:active { opacity: 0.5; }
 
-  /* Amber bar above active tab */
-  .tab-btn--active::before {
+  .tab-btn--active { color: var(--text-primary); }
+
+  /* Amber dot/bar indicator above active tab */
+  .tab-btn--active::after {
     content: '';
     position: absolute;
-    top: 0;
+    bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
-    width: 24px;
+    width: 28px;
     height: 2px;
     background: var(--accent);
-    border-radius: 0 0 2px 2px;
+    border-radius: 2px 2px 0 0;
   }
 
-  /* Overview — fix the big gap */
-  .overview-content {
-    padding: 24px 20px 32px;
-    gap: 0;
+  /* ── 5. Modals clear tab bar ── */
+  .edit-overlay { padding-bottom: 72px; }
+
+  /* ── 6. Back button style on mobile ── */
+  .mobile-back-btn {
+    width: 40px;
+    height: 38px;
+    color: var(--text-primary);
   }
-
-  /* Section & detail padding */
-  .section-content  { padding: 20px 20px 32px; }
-  .detail-content   { padding: 20px 20px 32px; }
-
-  /* Header tighter on mobile */
-  .app-header { padding: 0 16px; }
-
-  /* Edit / share modal clears tab bar */
-  .edit-overlay { padding-bottom: 60px; }
 }
-
