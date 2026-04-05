@@ -213,12 +213,12 @@
     content: '';
     position: absolute;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 28px;
+    left: 0;
+    right: 0;
+    width: 100%;
     height: 2px;
     background: #b8956a;
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 2px 2px;
   }
 
   /* Content padding — scroll clears fixed tab bar */
