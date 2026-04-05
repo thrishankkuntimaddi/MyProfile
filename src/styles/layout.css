@@ -127,12 +127,13 @@
 }
 
 @media (max-width: 640px) {
-  /* Replace desktop footer row with tab bar */
+
+  /* Shrink grid footer row to match tab bar */
   .app-layout {
-    grid-template-rows: var(--header-h) 1fr 56px;
+    grid-template-rows: var(--header-h) 1fr 60px;
   }
 
-  /* Hide desktop footer */
+  /* Hide desktop footer text on mobile */
   .app-footer {
     display: none;
   }
@@ -141,9 +142,8 @@
   .mobile-tab-bar {
     display: flex;
     align-items: stretch;
-    background: #0f0f0f;
-    border-top: 1px solid var(--border-subtle);
-    /* iOS home indicator space */
+    background: #0c0c0c;
+    border-top: 1px solid rgba(255,255,255,0.07);
     padding-bottom: env(safe-area-inset-bottom);
     z-index: 200;
   }
@@ -154,47 +154,56 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
-    padding: 8px 4px;
+    gap: 4px;
+    padding: 10px 6px 8px;
     border: none;
     background: none;
-    color: var(--text-muted);
+    color: rgba(255,255,255,0.28);
     font-family: var(--font);
     font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: color 150ms ease;
+    transition: color 120ms ease;
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
 
-  .tab-btn:hover,
-  .tab-btn:active {
-    color: var(--text-secondary);
-  }
+  .tab-btn:active { opacity: 0.7; }
 
   .tab-btn--active {
     color: var(--text-primary);
   }
 
-  .tab-btn--muted {
-    color: var(--text-muted);
-    opacity: 0.6;
+  /* Add subtle indicator bar above active tab */
+  .tab-btn--active::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--accent);
+    position: absolute;
+    top: 0;
+    border-radius: 0 0 2px 2px;
   }
 
-  .tab-btn--muted:hover {
-    opacity: 1;
+  .tab-btn { position: relative; }
+
+  /* Overview — fix the big gap */
+  .overview-content {
+    padding: 24px 20px 32px;
+    gap: 0;
   }
 
-  /* Keep content above the tab bar */
-  .overview-wrap,
-  .section-overlay,
-  .detail-overlay {
-    bottom: 0;
-  }
+  /* Section & detail padding */
+  .section-content  { padding: 20px 20px 32px; }
+  .detail-content   { padding: 20px 20px 32px; }
 
-  /* Edit modal should sit above tab bar */
-  .edit-overlay {
-    padding-bottom: 0;
-  }
+  /* Header tighter on mobile */
+  .app-header { padding: 0 16px; }
+
+  /* Edit / share modal clears tab bar */
+  .edit-overlay { padding-bottom: 60px; }
 }
+

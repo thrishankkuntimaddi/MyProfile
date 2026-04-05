@@ -275,11 +275,9 @@ export default function App() {
       {/* Mobile bottom tab bar — only visible on ≤640px */}
       <MobileTabBar
         view={view}
-        hasPassword={hasPassword}
         onHome={handleHome}
         onShare={() => setShareOpen(true)}
-        onLock={handleLockClick}
-        onReset={() => { if (window.confirm('Reset all data? This cannot be undone.')) clearAll() }}
+        onSettings={handleLockClick}
       />
 
       {/* Edit modal */}
@@ -303,6 +301,7 @@ export default function App() {
           onChangePassword={(old, next) => changePassword(old, next)}
           onRemovePassword={(old) => deletePassword(old)}
           onLockNow={lock}
+          onResetAll={clearAll}
           onClose={() => setLockModalOpen(false)}
         />
       )}
