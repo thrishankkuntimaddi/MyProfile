@@ -121,9 +121,9 @@
   z-index: 300;
 }
 
-/* ── Mobile tab bar ── */
+/* ── Mobile tab bar — always hidden on desktop ── */
 .mobile-tab-bar {
-  display: none; /* hidden on desktop */
+  display: none;
 }
 
 /* ────────────────────────────────────────────────
@@ -131,53 +131,46 @@
    ──────────────────────────────────────────────── */
 @media (max-width: 640px) {
 
-  /* ── 1. Grid: header collapses on home, tab bar 72px ── */
+  /* Grid stays 3-row, footer row shrinks to 0 */
   .app-layout {
-    /* When at home, header is hidden → var collapses via class below */
-    grid-template-rows: var(--header-h) 1fr 72px;
+    grid-template-rows: var(--header-h) 1fr 0px;
   }
 
-  /* Hide the header entirely on the home screen — tab bar is navigation */
-  .app-header--home {
-    display: none;
-  }
-
-  /* When header hidden, let content fill the freed space */
-  .app-layout:has(.app-header--home) {
-    grid-template-rows: 0 1fr 72px;
-  }
-
-  /* Safari fallback (no :has support) — just make header tiny */
-  .app-header {
-    padding: 0 14px;
-    min-height: 38px;
-    height: 38px;
-  }
-
-  /* The override for home: zero height */
-  .app-header--home {
-    height: 0;
+  /* Footer: invisible but still in grid (prevents layout collapse) */
+  .app-footer {
+    visibility: hidden;
     overflow: hidden;
-    border: none;
+    height: 0;
     padding: 0;
-    min-height: 0;
+    border: none;
   }
 
-  /* ── 2. Hide desktop footer ── */
-  .app-footer { display: none; }
+  /* Header: compact on mobile */
+  .app-header {
+    padding: 0 16px;
+    height: var(--header-h);
+  }
 
-  /* ── 3. Content padding ── */
-  .overview-content  { padding: 20px 18px 20px; }
-  .section-content   { padding: 16px 18px 20px; }
-  .detail-content    { padding: 16px 18px 20px; }
+  /* Content padding — account for fixed tab bar at bottom */
+  .overview-content  { padding: 20px 18px 84px; }
+  .section-content   { padding: 16px 18px 84px; }
+  .detail-content    { padding: 16px 18px 84px; }
 
-  /* ── 4. Tab bar ── */
+  /* ── Tab bar: FIXED at bottom, not a grid item ── */
   .mobile-tab-bar {
     display: flex;
     align-items: stretch;
-    background: #111111;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: rgba(14, 14, 14, 0.97);
     border-top: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: env(safe-area-inset-bottom, 4px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    z-index: 999;
   }
 
   .tab-btn {
@@ -186,15 +179,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    padding: 8px 4px 6px;
+    gap: 5px;
     border: none;
     background: none;
     color: rgba(255,255,255,0.3);
     font-family: var(--font);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     cursor: pointer;
     transition: color 100ms ease;
@@ -203,33 +195,31 @@
     position: relative;
   }
 
-  /* SVG icon colour inherits */
-  .tab-btn svg { color: inherit; }
-
   .tab-btn:active { opacity: 0.5; }
+  .tab-btn--active { color: #ffffff; }
 
-  .tab-btn--active { color: var(--text-primary); }
-
-  /* Amber dot/bar indicator above active tab */
-  .tab-btn--active::after {
+  /* Amber line at top of active tab */
+  .tab-btn--active::before {
     content: '';
     position: absolute;
-    bottom: 100%;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 28px;
+    width: 32px;
     height: 2px;
-    background: var(--accent);
-    border-radius: 2px 2px 0 0;
+    background: #b8956a;
+    border-radius: 0 0 3px 3px;
   }
 
-  /* ── 5. Modals clear tab bar ── */
-  .edit-overlay { padding-bottom: 72px; }
+  /* Modals sit above fixed tab bar */
+  .edit-overlay { z-index: 1000; }
 
-  /* ── 6. Back button style on mobile ── */
+  /* Back button */
   .mobile-back-btn {
     width: 40px;
-    height: 38px;
+    height: 40px;
+    display: flex;
+    align-items: center;
     color: var(--text-primary);
   }
 }
