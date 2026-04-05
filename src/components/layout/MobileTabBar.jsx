@@ -5,25 +5,23 @@ export function MobileTabBar({ view, onHome, onShare, onSettings }) {
 
   return (
     <nav className="mobile-tab-bar">
-
       <button
         className={`tab-btn ${isHome ? 'tab-btn--active' : ''}`}
         onClick={onHome}
       >
-        <Home size={20} />
+        <Home size={24} strokeWidth={1.75} />
         <span>Home</span>
       </button>
 
       <button className="tab-btn" onClick={onShare}>
-        <Share2 size={20} />
+        <Share2 size={24} strokeWidth={1.75} />
         <span>Share</span>
       </button>
 
       <button className="tab-btn" onClick={onSettings}>
-        <Settings2 size={20} />
+        <Settings2 size={24} strokeWidth={1.75} />
         <span>Settings</span>
       </button>
-
     </nav>
   )
 }

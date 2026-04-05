@@ -51,7 +51,8 @@ function StrengthBar({ password }) {
 
 // modes: 'menu' | 'set' | 'change' | 'remove' | 'reset-confirm'
 export function PasswordModal({ hasPassword, onSetPassword, onChangePassword, onRemovePassword, onLockNow, onResetAll, onClose }) {
-  const [mode,    setMode]    = useState(hasPassword ? 'menu' : 'set')
+  // Always open to menu — menu handles both has-password and no-password states
+  const [mode,    setMode]    = useState('menu')
   const [oldPwd,  setOldPwd]  = useState('')
   const [newPwd,  setNewPwd]  = useState('')
   const [confirm, setConfirm] = useState('')
@@ -225,7 +226,7 @@ export function PasswordModal({ hasPassword, onSetPassword, onChangePassword, on
     if (success || mode === 'menu') return null
     return (
       <div className="edit-modal__footer">
-        <button className="btn-ghost" onClick={() => go(hasPassword ? 'menu' : 'set')}>← Back</button>
+        <button className="btn-ghost" onClick={() => go('menu')}>← Back</button>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
           <button className="btn-ghost" onClick={onClose}>Cancel</button>
           {mode === 'set'           && <button className="btn-primary"     onClick={handleSet}>Set Password</button>}
