@@ -36,15 +36,25 @@ function detectSection(line) {
 // ── Name extraction ───────────────────────────────────────────────────────────
 
 function extractName(rawLines) {
-  // Try first 5 lines for a 2-3 word proper-noun name
-  for (const line of rawLines.slice(0, 5)) {
+  for (const line of rawLines.slice(0, 8)) {
     const cleaned = clean(line)
-    if (/^[A-Z][a-z]+([\s][A-Z][a-z]+){1,3}$/.test(cleaned) && cleaned.split(' ').length <= 4) {
-      return cleaned
+    if (!cleaned || cleaned.length > 60) continue
+    // Mixed-case: "John Doe" or "Thrishank Kuntimaddi"
+    if (/^[A-Z][a-z]+([ ][A-Z][a-z]+){1,3}$/.test(cleaned)) return cleaned
+    // All-caps name: "JOHN DOE" — convert to title case
+    if (/^[A-Z]+([ ][A-Z]+){1,3}$/.test(cleaned)) {
+      return cleaned.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
+    }
+    // All-caps single word like "THRISHANKKUNTIMADDI"
+    if (/^[A-Z]{3,}$/.test(cleaned) && cleaned.length < 30) {
+      return cleaned.charAt(0) + cleaned.slice(1).toLowerCase()
     }
   }
-  return clean(rawLines[0] || '')
+  // Fallback: first line, capped at 60 chars
+  const first = clean(rawLines[0] || '')
+  return first.length > 60 ? first.slice(0, 60).trim() : first
 }
+
 
 // ── Email / location ──────────────────────────────────────────────────────────
 

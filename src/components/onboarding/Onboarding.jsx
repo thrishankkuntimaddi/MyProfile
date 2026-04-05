@@ -82,15 +82,38 @@ export function Onboarding({ onComplete }) {
   }
 
   if (showPasswordStep && parsedData) {
+    const p = parsedData.profile
+    const nameDisplay = p.name && p.name.length < 60 ? p.name : null
+    const sections = [
+      parsedData.experience?.length && `${parsedData.experience.length} experience`,
+      parsedData.education?.length && `${parsedData.education.length} education`,
+      parsedData.skills?.length && `${parsedData.skills.length} skill groups`,
+      parsedData.projects?.length && `${parsedData.projects.length} projects`,
+    ].filter(Boolean)
+
     return (
       <div className="fullscreen-center">
         <div className="onboarding-box">
           <div className="onboarding-title">Profile ready</div>
           <div className="onboarding-sub">
-            {parsedData.profile.name
-              ? `Found: ${parsedData.profile.name}`
-              : 'Data extracted successfully.'}
-            {' '}You can edit any field after loading.
+            {nameDisplay ? `Parsed: ${nameDisplay}` : 'Data extracted successfully.'}
+          </div>
+
+          {sections.length > 0 && (
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 'var(--sp-2)',
+              margin: 'var(--sp-4) 0',
+            }}>
+              {sections.map((s, i) => (
+                <span key={i} className="tag" style={{ fontSize: 12 }}>✓ {s}</span>
+              ))}
+            </div>
+          )}
+
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 'var(--sp-6)' }}>
+            You can edit any field after loading.
           </div>
 
           <div className="password-setup">
@@ -114,6 +137,7 @@ export function Onboarding({ onComplete }) {
       </div>
     )
   }
+
 
   return (
     <div className="fullscreen-center">
