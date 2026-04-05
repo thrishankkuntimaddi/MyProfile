@@ -50,7 +50,8 @@ function StrengthBar({ password }) {
 }
 
 // modes: 'menu' | 'set' | 'change' | 'remove' | 'reset-confirm'
-export function PasswordModal({ hasPassword, onSetPassword, onChangePassword, onRemovePassword, onLockNow, onResetAll, onClose }) {
+export function PasswordModal({ hasPassword, onSetPassword, onChangePassword, onRemovePassword, onLockNow, onResetAll, onClose, inline }) {
+
   // Always open to menu — menu handles both has-password and no-password states
   const [mode,    setMode]    = useState('menu')
   const [oldPwd,  setOldPwd]  = useState('')
@@ -246,21 +247,27 @@ export function PasswordModal({ hasPassword, onSetPassword, onChangePassword, on
     'reset-confirm': 'Confirm Reset',
   }
 
+  const inner = (
+    <div className="edit-modal share-modal-sized">
+      <div className="edit-modal__header">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Lock size={13} style={{ color: 'var(--accent)' }} />
+          <span className="edit-modal__title">{titles[mode]}</span>
+        </div>
+        <button className="btn-icon" onClick={onClose}><X size={15} /></button>
+      </div>
+      <div className="edit-modal__body" style={{ gap: 16 }}>
+        {renderContent()}
+      </div>
+      {renderFooter()}
+    </div>
+  )
+
+  if (inline) return inner
+
   return (
     <div className="edit-overlay" onClick={onClose}>
-      <div className="edit-modal share-modal-sized" onClick={e => e.stopPropagation()}>
-        <div className="edit-modal__header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Lock size={13} style={{ color: 'var(--accent)' }} />
-            <span className="edit-modal__title">{titles[mode]}</span>
-          </div>
-          <button className="btn-icon" onClick={onClose}><X size={15} /></button>
-        </div>
-        <div className="edit-modal__body" style={{ gap: 16 }}>
-          {renderContent()}
-        </div>
-        {renderFooter()}
-      </div>
+      {inner}
     </div>
   )
 }

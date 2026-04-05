@@ -44,6 +44,9 @@ export default function App() {
   const [shareOpen,     setShareOpen]     = useState(false)
   const [lockModalOpen, setLockModalOpen] = useState(false)
 
+  // ── Mobile tab state: 'home' | 'share' | 'settings' ─────────────────────────
+  const [mobileTab, setMobileTab] = useState('home')
+
   // ── Shared profile (URL hash read-only view) ────────────────────────────────
   const [sharedProfile, setSharedProfile] = useState(null)
 
@@ -119,10 +122,19 @@ export default function App() {
     updateProfile({ ...profile, [section]: profile[section].filter((_, i) => i !== index) })
   }
 
-  // ── Lock click: open password modal (close share first) ────────────────────
+  // ── Lock click: desktop → modal, mobile → settings tab ────────────────────
   function handleLockClick() {
     setShareOpen(false)
     setLockModalOpen(true)
+  }
+
+  // ── Mobile tab switching ─────────────────────────────────────────────────────
+  function switchMobileTab(tab) {
+    setMobileTab(tab)
+    if (tab === 'home') {
+      setShareOpen(false)
+      setLockModalOpen(false)
+    }
   }
 
   // ── Auth guards ──────────────────────────────────────────────────────────────
@@ -241,32 +253,59 @@ export default function App() {
       />
 
       <main className="app-content">
-        {/* Base layer: always rendered */}
-        <Overview
-          profile={profile}
-          onOpenSection={openSection}
-          onEditProfile={() => openEdit('profile', null, profile.profile)}
-        />
-
-        {/* Section overlay */}
-        {(view.level >= 1 || exitingSection) && (
-          <div
-            key={view.section}
-            className={`section-overlay ${exitingSection ? 'anim-section-out' : 'anim-section-in'}`}
-            onAnimationEnd={() => { if (exitingSection) setExitingSection(false) }}
-          >
-            <div className="section-content">{renderSectionContent()}</div>
+        {/* ── Mobile Share Tab (replaces modal on mobile) ── */}
+        {mobileTab === 'share' && (
+          <div className="mobile-tab-view">
+            <ShareModal profile={profile} onClose={() => switchMobileTab('home')} inline />
           </div>
         )}
 
-        {/* Detail overlay */}
-        {(view.level === 2 || exitingDetail) && (
-          <div
-            className={`detail-overlay ${exitingDetail ? 'anim-detail-out' : 'anim-detail-in'}`}
-            onAnimationEnd={() => { if (exitingDetail) setExitingDetail(false) }}
-          >
-            <div className="detail-content">{renderDetailContent()}</div>
+        {/* ── Mobile Settings Tab (replaces modal on mobile) ── */}
+        {mobileTab === 'settings' && (
+          <div className="mobile-tab-view">
+            <PasswordModal
+              hasPassword={hasPassword}
+              onSetPassword={(pwd) => setPassword(pwd)}
+              onChangePassword={(old, next) => changePassword(old, next)}
+              onRemovePassword={(old) => deletePassword(old)}
+              onLockNow={lock}
+              onResetAll={clearAll}
+              onClose={() => switchMobileTab('home')}
+              inline
+            />
           </div>
+        )}
+
+        {/* ── Home Tab: Profile views ── */}
+        {mobileTab === 'home' && (
+          <>
+            <Overview
+              profile={profile}
+              onOpenSection={openSection}
+              onEditProfile={() => openEdit('profile', null, profile.profile)}
+            />
+
+            {/* Section overlay */}
+            {(view.level >= 1 || exitingSection) && (
+              <div
+                key={view.section}
+                className={`section-overlay ${exitingSection ? 'anim-section-out' : 'anim-section-in'}`}
+                onAnimationEnd={() => { if (exitingSection) setExitingSection(false) }}
+              >
+                <div className="section-content">{renderSectionContent()}</div>
+              </div>
+            )}
+
+            {/* Detail overlay */}
+            {(view.level === 2 || exitingDetail) && (
+              <div
+                className={`detail-overlay ${exitingDetail ? 'anim-detail-out' : 'anim-detail-in'}`}
+                onAnimationEnd={() => { if (exitingDetail) setExitingDetail(false) }}
+              >
+                <div className="detail-content">{renderDetailContent()}</div>
+              </div>
+            )}
+          </>
         )}
       </main>
 
@@ -276,9 +315,10 @@ export default function App() {
       {/* Mobile bottom tab bar — only visible on ≤640px */}
       <MobileTabBar
         view={view}
-        onHome={handleHome}
-        onShare={() => { setLockModalOpen(false); setShareOpen(true) }}
-        onSettings={handleLockClick}
+        mobileTab={mobileTab}
+        onHome={() => { switchMobileTab('home'); handleHome() }}
+        onShare={() => switchMobileTab('share')}
+        onSettings={() => switchMobileTab('settings')}
       />
 
       {/* Edit modal */}

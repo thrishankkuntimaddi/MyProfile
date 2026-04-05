@@ -226,34 +226,19 @@
   .section-content  { padding: 16px 16px 88px; }
   .detail-content   { padding: 16px 16px 88px; }
 
-  /* ── Modals: slide up and sit ABOVE the tab bar ── */
-  .edit-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 72px;        /* stops at top of tab bar */
-    z-index: 600;
-    padding: 0;
-    align-items: flex-end;
-    overflow: hidden;    /* keeps modal clamped inside */
-  }
-
-  .edit-modal {
-    width: 100%;
-    max-width: 100%;
-    max-height: 100%;    /* fills overlay, not beyond */
-    border-radius: 16px 16px 0 0;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
+  /* Mobile tab views — full content area, no modal */
+  .mobile-tab-view {
+    position: absolute;
+    inset: 0;
     overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--bg-base);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px 88px;
   }
 
-  /* Share modal same */
-  .share-modal-sized {
-    width: 100%;
-    max-width: 100%;
-    border-radius: 16px 16px 0 0;
-  }
+  /* Desktop modals still work normally — just raise z-index */
+  .edit-overlay { z-index: 600; }
+
 }
