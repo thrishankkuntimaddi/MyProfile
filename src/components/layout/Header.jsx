@@ -69,27 +69,31 @@ export function Header({ view, hasPassword, onBack, onHome, onReset, onLock, onS
 
       {/* Right: actions */}
       <div className="header-actions">
+        {/* Back button — shown on all screen sizes when not at home */}
         {!atHome && (
           <button className="btn-icon" onClick={onBack} title="Back">←</button>
         )}
-        {onShare && (
-          <button className="btn-icon" onClick={onShare} title="Share profile">
-            <Share2 size={13} />
+        {/* Share / Lock / Reset — desktop only; tab bar handles mobile */}
+        <div className="header-actions-desktop">
+          {onShare && (
+            <button className="btn-icon" onClick={onShare} title="Share profile">
+              <Share2 size={13} />
+            </button>
+          )}
+          {onLock && (
+            <button
+              className="btn-icon"
+              onClick={onLock}
+              title={hasPassword ? 'Lock / Manage password' : 'Set password'}
+              style={{ color: hasPassword ? 'var(--accent)' : 'var(--text-muted)' }}
+            >
+              {hasPassword ? <Lock size={13} /> : <LockOpen size={13} />}
+            </button>
+          )}
+          <button className="btn-icon" onClick={onReset} title="Reset data">
+            <RotateCcw size={13} />
           </button>
-        )}
-        {onLock && (
-          <button
-            className="btn-icon"
-            onClick={onLock}
-            title={hasPassword ? 'Lock / Manage password' : 'Set password'}
-            style={{ color: hasPassword ? 'var(--accent)' : 'var(--text-muted)' }}
-          >
-            {hasPassword ? <Lock size={13} /> : <LockOpen size={13} />}
-          </button>
-        )}
-        <button className="btn-icon" onClick={onReset} title="Reset data">
-          <RotateCcw size={13} />
-        </button>
+        </div>
       </div>
     </header>
   )

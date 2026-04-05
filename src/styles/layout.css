@@ -24,6 +24,18 @@
   flex-shrink: 0;
 }
 
+/* Desktop-only header actions — hidden on mobile (tab bar handles those) */
+.header-actions-desktop {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .header-actions-desktop {
+    display: none;
+  }
+}
+
 /* Content area */
 .app-content {
   position: relative;
@@ -107,4 +119,82 @@
   justify-content: center;
   background: var(--bg-base);
   z-index: 300;
+}
+
+/* ── Mobile tab bar ── */
+.mobile-tab-bar {
+  display: none; /* hidden on desktop */
+}
+
+@media (max-width: 640px) {
+  /* Replace desktop footer row with tab bar */
+  .app-layout {
+    grid-template-rows: var(--header-h) 1fr 56px;
+  }
+
+  /* Hide desktop footer */
+  .app-footer {
+    display: none;
+  }
+
+  /* Show tab bar */
+  .mobile-tab-bar {
+    display: flex;
+    align-items: stretch;
+    background: #0f0f0f;
+    border-top: 1px solid var(--border-subtle);
+    /* iOS home indicator space */
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 200;
+  }
+
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 8px 4px;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: color 150ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .tab-btn:hover,
+  .tab-btn:active {
+    color: var(--text-secondary);
+  }
+
+  .tab-btn--active {
+    color: var(--text-primary);
+  }
+
+  .tab-btn--muted {
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+
+  .tab-btn--muted:hover {
+    opacity: 1;
+  }
+
+  /* Keep content above the tab bar */
+  .overview-wrap,
+  .section-overlay,
+  .detail-overlay {
+    bottom: 0;
+  }
+
+  /* Edit modal should sit above tab bar */
+  .edit-overlay {
+    padding-bottom: 0;
+  }
 }

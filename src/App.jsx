@@ -10,6 +10,7 @@ import { PasswordModal }  from './components/auth/PasswordModal'
 import { Header }         from './components/layout/Header'
 import { Footer }         from './components/layout/Footer'
 import { Overview }       from './components/layout/Overview'
+import { MobileTabBar }   from './components/layout/MobileTabBar'
 import { EditModal }      from './components/edit/EditModal'
 import { ShareModal }     from './components/share/ShareModal'
 
@@ -268,7 +269,18 @@ export default function App() {
         )}
       </main>
 
+      {/* Desktop footer — hidden on mobile */}
       <Footer profile={profile} />
+
+      {/* Mobile bottom tab bar — only visible on ≤640px */}
+      <MobileTabBar
+        view={view}
+        hasPassword={hasPassword}
+        onHome={handleHome}
+        onShare={() => setShareOpen(true)}
+        onLock={handleLockClick}
+        onReset={() => { if (window.confirm('Reset all data? This cannot be undone.')) clearAll() }}
+      />
 
       {/* Edit modal */}
       {editState && (
