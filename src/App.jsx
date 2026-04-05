@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
+import LZString from 'lz-string'
 import { useProfile } from './hooks/useProfile'
 import { useAuth } from './hooks/useAuth'
 import { useNavigation } from './hooks/useNavigation'
@@ -46,9 +47,11 @@ export default function App() {
     const hash = window.location.hash
     if (hash.startsWith('#share=')) {
       try {
-        const decoded = JSON.parse(decodeURIComponent(escape(atob(hash.slice(7)))))
-        setSharedProfile(decoded)
-        window.location.hash = ''
+        const raw = LZString.decompressFromEncodedURIComponent(hash.slice(7))
+        if (raw) {
+          setSharedProfile(JSON.parse(raw))
+          history.replaceState(null, '', window.location.pathname)
+        }
       } catch { /* ignore malformed */ }
     }
   }, [])

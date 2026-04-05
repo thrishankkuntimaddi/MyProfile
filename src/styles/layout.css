@@ -2,10 +2,13 @@
 .app-layout {
   display: grid;
   grid-template-rows: var(--header-h) 1fr var(--footer-h);
-  height: 100vh;
+  height: 100dvh; /* dynamic viewport height — correct on mobile */
   width: 100vw;
   overflow: hidden;
   background: var(--bg-base);
+  /* iOS safe area insets */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 /* Header */

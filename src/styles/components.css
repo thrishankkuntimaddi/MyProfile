@@ -1088,3 +1088,161 @@
   max-width: 320px;
 }
 
+/* Share modal specific sizing */
+.share-modal-sized {
+  max-width: 380px;
+}
+
+.share-modal-body {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+
+  /* Layout */
+  .overview-content {
+    padding: 28px 20px 40px;
+  }
+
+  .section-content {
+    padding: 24px 20px 40px;
+  }
+
+  .detail-content {
+    padding: 24px 20px 40px;
+  }
+
+  /* Header */
+  .app-header {
+    padding: 0 16px;
+  }
+
+  .header-brand {
+    font-size: 12px;
+  }
+
+  .header-breadcrumb {
+    font-size: 12px;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .header-breadcrumb__active {
+    max-width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+  }
+
+  /* Footer */
+  .app-footer {
+    padding: 0 16px;
+  }
+
+  /* Identity */
+  .identity-name {
+    font-size: 20px;
+  }
+
+  .identity-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 13px;
+  }
+
+  /* Section rows — bigger tap targets */
+  .section-row {
+    padding: 14px 0;
+    min-height: 52px;
+  }
+
+  .section-row__label {
+    font-size: 13px;
+  }
+
+  /* Item rows — bigger tap targets */
+  .item-row {
+    padding: 14px 0;
+    min-height: 52px;
+  }
+
+  /* Show edit/delete actions always on mobile (no hover) */
+  .item-row__actions {
+    opacity: 1;
+  }
+
+  /* Detail view typography */
+  .detail-title {
+    font-size: 20px;
+  }
+
+  /* Edit modal — full screen on mobile */
+  .edit-overlay {
+    align-items: flex-end;
+  }
+
+  .edit-modal {
+    max-height: 92vh;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .share-modal-sized {
+    max-width: 100%;
+  }
+
+  /* Skill tags wrap nicely */
+  .skill-group__tags {
+    gap: 6px;
+  }
+
+  .tag {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+
+  /* Link rows */
+  .link-row {
+    padding: 14px 0;
+  }
+
+  /* Buttons larger tap area */
+  .btn-add {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .btn-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .row-action-btn {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Extra-small (iPhone SE etc.) */
+@media (max-width: 380px) {
+  .identity-name {
+    font-size: 18px;
+  }
+
+  .section-row__label {
+    font-size: 12px;
+  }
+
+  .header-breadcrumb__active {
+    max-width: 100px;
+  }
+}
