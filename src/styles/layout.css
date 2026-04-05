@@ -174,7 +174,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
+    height: 72px;
     background: rgba(12, 12, 12, 0.98);
     border-top: 1px solid rgba(255,255,255,0.1);
     backdrop-filter: blur(16px);
@@ -222,26 +222,27 @@
   }
 
   /* Content padding — scroll clears fixed tab bar */
-  .overview-content { padding: 20px 16px 80px; }
-  .section-content  { padding: 16px 16px 80px; }
-  .detail-content   { padding: 16px 16px 80px; }
+  .overview-content { padding: 20px 16px 88px; }
+  .section-content  { padding: 16px 16px 88px; }
+  .detail-content   { padding: 16px 16px 88px; }
 
-  /* ── Modals: slide up from above the tab bar ── */
+  /* ── Modals: slide up and sit ABOVE the tab bar ── */
   .edit-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 60px;   /* stop at tab bar — nav stays visible */
+    bottom: 72px;        /* stops at top of tab bar */
     z-index: 600;
     padding: 0;
     align-items: flex-end;
+    overflow: hidden;    /* keeps modal clamped inside */
   }
 
   .edit-modal {
     width: 100%;
     max-width: 100%;
-    max-height: 90vh;
+    max-height: 100%;    /* fills overlay, not beyond */
     border-radius: 16px 16px 0 0;
     border-left: none;
     border-right: none;
