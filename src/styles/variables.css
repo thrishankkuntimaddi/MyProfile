@@ -1,0 +1,50 @@
+:root {
+  /* Backgrounds */
+  --bg-base:        #0c0c0c;
+  --bg-surface:     #111111;
+  --bg-hover:       #161616;
+  --bg-active:      #1c1c1c;
+  --bg-input:       #141414;
+
+  /* Borders */
+  --border-default: #222222;
+  --border-subtle:  #191919;
+  --border-accent:  #383838;
+
+  /* Typography */
+  --text-primary:   #e4e4e4;
+  --text-secondary: #7a7a7a;
+  --text-muted:     #404040;
+  --text-inverse:   #0c0c0c;
+
+  /* Accent — warm, restrained */
+  --accent:         #b8956a;
+  --accent-dim:     rgba(184, 149, 106, 0.12);
+  --accent-hover:   #c9a87c;
+
+  /* Shape */
+  --radius:         2px;
+  --radius-sm:      1px;
+
+  /* Transitions */
+  --transition:     150ms ease;
+  --transition-slow: 220ms ease;
+
+  /* Font */
+  --font:           'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Spacing scale */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+
+  /* Layout */
+  --header-h: 44px;
+  --footer-h: 28px;
+  --sidebar-w: 0px; /* no sidebar in this design */
+}
