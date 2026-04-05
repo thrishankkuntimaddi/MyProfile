@@ -13,6 +13,30 @@ function lines(text) {
     .filter(Boolean)
 }
 
+// Pre-process: force newlines before section keywords even if they appear mid-line.
+// Handles flat PDF output where the entire page is one long line.
+const SECTION_KEYWORDS = [
+  'WORK EXPERIENCE', 'PROFESSIONAL EXPERIENCE', 'EXPERIENCE',
+  'EDUCATION', 'ACADEMIC BACKGROUND', 'QUALIFICATIONS',
+  'TECHNICAL SKILLS', 'SKILLS', 'TECHNOLOGIES', 'TOOLS', 'COMPETENCIES',
+  'PROJECTS', 'PERSONAL PROJECTS', 'SIDE PROJECTS', 'PORTFOLIO',
+  'SUMMARY', 'PROFILE', 'ABOUT ME', 'OBJECTIVE', 'BIO',
+  'LINKS', 'CONTACT', 'SOCIAL', 'ONLINE PRESENCE',
+  'CERTIFICATIONS', 'ACHIEVEMENTS', 'AWARDS',
+]
+
+function preprocessText(rawText) {
+  let text = rawText
+  // Insert a newline before each known section keyword (case-insensitive)
+  for (const kw of SECTION_KEYWORDS) {
+    // Only insert newline if keyword appears mid-line (not already at start of line)
+    const re = new RegExp(`(?<!^|\\n)(${kw})`, 'gim')
+    text = text.replace(re, '\n$1')
+  }
+  return text
+}
+
+
 // Date range pattern: "Jan 2020 – Mar 2022", "2019 - 2021", "2020–Present"
 const DATE_RANGE_RE =
   /(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)?\s*\d{4}\s*[–\-–—]\s*(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)?\s*\d{4}|Present|Current|Now)/gi
@@ -258,12 +282,16 @@ function extractSummary(block) {
  */
 export function mapTextToProfile(rawText) {
   const result = JSON.parse(JSON.stringify(DEFAULT_PROFILE))
-  const allLines = lines(rawText)
 
-  // Extract metadata from full text
+  // Pre-process: ensure section headers are on their own lines
+  const processedText = preprocessText(rawText)
+  const allLines = lines(processedText)
+
+  // Extract metadata from full (original) text
   result.profile.email = extractEmail(rawText)
   result.profile.location = extractLocation(rawText)
   result.links = extractLinks(rawText)
+
 
   // Split into sections
   const sections = {}

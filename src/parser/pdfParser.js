@@ -6,9 +6,8 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 ).toString()
 
 /**
- * Extract text from PDF preserving line structure using y-coordinate grouping
- * @param {File} file
- * @returns {Promise<string>}
+ * Extract text from PDF with proper line reconstruction.
+ * Sorts items by position, detects line breaks by y-gap, uses hasEOL.
  */
 export async function extractTextFromPDF(file) {
   const arrayBuffer = await file.arrayBuffer()
@@ -20,29 +19,61 @@ export async function extractTextFromPDF(file) {
     const page = await pdf.getPage(i)
     const content = await page.getTextContent()
 
-    // Group text items by their y-position (rounded to nearest 2px)
-    // Items on the same horizontal line share similar y values
-    const lineMap = new Map()
+    // Collect valid items with position
+    const items = content.items
+      .filter((it) => it.str && it.str.trim().length > 0)
+      .map((it) => ({
+        str: it.str,
+        x: Math.round(it.transform[4]),
+        y: it.transform[5],          // baseline y in PDF user units
+        hasEOL: it.hasEOL || false,
+        height: it.height || 0,
+      }))
 
-    for (const item of content.items) {
-      if (!item.str?.trim()) continue
-      // item.transform = [scaleX, skewX, skewY, scaleY, x, y]
-      const y = Math.round(item.transform[5] / 2) * 2
-      if (!lineMap.has(y)) lineMap.set(y, [])
-      lineMap.get(y).push({ x: item.transform[4], str: item.str })
+    if (!items.length) continue
+
+    // Sort: descending y (top of page first), then ascending x (left to right)
+    items.sort((a, b) => (b.y - a.y) || (a.x - b.x))
+
+    // Estimate line-height from the most common y-gap between adjacent items
+    const gaps = []
+    for (let j = 1; j < items.length; j++) {
+      const d = Math.abs(items[j - 1].y - items[j].y)
+      if (d > 0.5 && d < 80) gaps.push(d)
+    }
+    gaps.sort((a, b) => a - b)
+    // Use 25th-percentile gap as "single line spacing"
+    const p25 = gaps[Math.floor(gaps.length * 0.25)] || 10
+    // Threshold: anything > 40% of a single line = new line
+    const threshold = p25 * 0.4
+
+    // Build lines
+    let pageLines = []
+    let currentLine = []
+    let prevY = items[0]?.y ?? 0
+
+    for (const item of items) {
+      const yDiff = Math.abs(item.y - prevY)
+
+      if (yDiff > threshold && currentLine.length > 0) {
+        pageLines.push(currentLine.join(' ').trim())
+        currentLine = []
+      }
+
+      currentLine.push(item.str)
+      prevY = item.y
+
+      if (item.hasEOL) {
+        pageLines.push(currentLine.join(' ').trim())
+        currentLine = []
+      }
     }
 
-    // Sort lines: descending y = top of page first
-    // Sort items within each line: ascending x = left to right
-    const sortedLines = [...lineMap.entries()]
-      .sort((a, b) => b[0] - a[0])
-      .map(([, items]) => {
-        const sorted = items.sort((a, b) => a.x - b.x)
-        return sorted.map((it) => it.str).join(' ').trim()
-      })
-      .filter(Boolean)
+    if (currentLine.length > 0) {
+      pageLines.push(currentLine.join(' ').trim())
+    }
 
-    fullText += sortedLines.join('\n') + '\n'
+    fullText += pageLines.filter(Boolean).join('\n') + '\n'
   }
 
   return fullText
