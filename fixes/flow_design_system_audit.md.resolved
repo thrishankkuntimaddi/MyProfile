@@ -1,0 +1,510 @@
+# 🎨 Flow Design System — Complete UI Audit
+> **MyProfile** · Extracted from source · No redesign, analysis only
+
+---
+
+## 1. 🎨 COLOR SYSTEM
+
+### Token Map (from `variables.css`)
+
+| Token | Value | Role |
+|---|---|---|
+| `--bg-base` | `#0c0c0c` | Root background, app shell |
+| `--bg-surface` | `#111111` | Card surfaces (tags, QR area) |
+| `--bg-hover` | `#161616` | Hover fill for drop zones, pwd menu |
+| `--bg-active` | `#1c1c1c` | Active/pressed states, avatar bg, btn-primary bg |
+| `--bg-input` | `#141414` | All form inputs / textareas |
+| `--border-default` | `#222222` | Standard borders (cards, inputs, tags) |
+| `--border-subtle` | `#191919` | Dividers, separator lines |
+| `--border-accent` | `#383838` | Focused input borders, scrollbar thumb, footer dot |
+| `--text-primary` | `#e4e4e4` | Headings, active labels, focused content |
+| `--text-secondary` | `#7a7a7a` | Default body text, row labels, tags |
+| `--text-muted` | `#404040` | Metadata, counts, preview text, disabled states |
+| `--text-inverse` | `#0c0c0c` | Text on light/accent backgrounds (unused in current UI) |
+| `--accent` | `#b8956a` | Warm amber — primary accent, lock icon, copy btn, link btn |
+| `--accent-dim` | `rgba(184,149,106,0.12)` | Accent hover fill, `::selection` background |
+| `--accent-hover` | `#c9a87c` | Accent hover state (btn-copy hover) |
+
+### Hardcoded Colors (Outside Token System)
+
+| Value | Location | Role |
+|---|---|---|
+| `#e05252` | btn-danger, lock-error, pwd-error, row-action-btn--danger | Error / destructive red |
+| `#b05252` | btn-ghost-danger default state | Softer danger (dimmed) |
+| `#3a2222` | btn-ghost-danger border, pwd-reset-icon border | Danger border (dark red tint) |
+| `rgba(224,82,82,0.06)` | pwd-error bg, btn-ghost-danger:hover bg | Error fill (very dim) |
+| `#5aba8a` | pwd-success__icon border + color | Success green |
+| `rgba(12,12,12,0.98)` | mobile-tab-bar background | Mobile bar blur bg |
+| `rgba(255,255,255,0.35)` | .tab-btn (inactive) | Mobile tab inactive color |
+| `rgba(0,0,0,0.6)` | .edit-overlay backdrop | Modal scrim |
+| `#141414` | .edit-modal background | Modal surface (duplicates `--bg-input`) |
+| `#111111` | .share-qr background | QR surface (duplicates `--bg-surface`) |
+| `#ffffff` | .tab-btn--active | Active tab label (pure white) |
+| `#b8956a` | .tab-btn--active::before | Active indicator line (restates `--accent`) |
+
+### Color Groups
+
+**Primary (backgrounds)**
+- Base: `#0c0c0c` → Surface: `#111111` → Input: `#141414` → Hover: `#161616` → Active: `#1c1c1c`
+
+**Borders**
+- Subtle → Default → Accent: `#191919` → `#222222` → `#383838`
+
+**Text hierarchy**
+- Muted → Secondary → Primary: `#404040` → `#7a7a7a` → `#e4e4e4`
+
+**Accent (warm amber)**
+- Dim → Default → Hover: `rgba(184,149,106,0.12)` → `#b8956a` → `#c9a87c`
+
+**State Colors (hardcoded, no tokens)**
+- Error: `#e05252` / `#b05252` / `#3a2222`
+- Success: `#5aba8a`
+
+### ⚠️ Issues Found
+- `--text-inverse` token is defined but **never used** anywhere in the codebase
+- `#141414` used directly in `.edit-modal` — duplicates `--bg-input` without token
+- `#111111` used directly in `.share-qr` — duplicates `--bg-surface` without token
+- `#b8956a` is restated in `.tab-btn--active::before` — should use `var(--accent)`
+- Error/Success colors have **no design tokens** defined (`--color-error`, `--color-success`)
+
+---
+
+## 2. 🔤 TYPOGRAPHY SYSTEM
+
+### Font Family
+
+| Token | Value |
+|---|---|
+| `--font` | `'Inter', system-ui, -apple-system, sans-serif` |
+
+Loaded via Google Fonts: `Inter` weights `300, 400, 500, 600, 700`.
+
+### Font Size Scale (All Occurrences)
+
+| Size | px | Used in |
+|---|---|---|
+| 9px | `9px` | `.skill-group__label`, `.detail-section__label`, `.section-heading`, label caps |
+| 10px | `10px` | `.edit-field__label`, `.section-label`, `.share-divider`, strength-label |
+| 11px | `11px` | `.section-row__preview`, `.item-row__sub`, `.item-row__date`, `.footer-text`, `.header-breadcrumb__sep`, `.tag`, `.share-url-text`, `.share-qr-label`, `.btn-add`, `.link-row__url`, `.drop-zone__hint` |
+| 12px | `12px` | `.section-row__count`, `.item-row__sub`, `.detail-period`, `.detail-role` (border), `.identity-meta`, `.lock-error`, `.pwd-error`, `.btn-ghost`, `.btn-ghost-danger`, `.share-note`, `.lock-reset`, `.footer-dot` |
+| 13px | `13px` | `.header-brand`, `.header-breadcrumb`, `.identity-role`, `.identity-summary`, `.detail-role`, `.detail-section__body`, `.onboarding-sub`, `.onboarding-textarea`, `.lock-sub`, `.lock-input`, `.pwd-menu-item`, `.password-setup__input`, `.parsing-label`, `.edit-input`, `.edit-textarea`, `.btn-add-group`, `.drop-zone__text`, `.pwd-success`, `.empty-state`, `.btn-primary (font-size)` |
+| 14px | `14px` | Root base size (`html`), `.section-row__label`, `.item-row__title`, `.detail-body`, `.detail-role`, `.link-row__name`, `.profile-info__title`, `.edit-input`, all inputs |
+| 15px | `15px` | `.identity-avatar`, `.pwd-reset-title` |
+| 16px | `16px` | `.lock-title` |
+| 18px | `18px` | `.onboarding-title` (mobile: `18px` for `.identity-name`) |
+| 20px | `20px` | `.profile-info__name`, `.identity-name` on mobile, `.detail-title` on mobile |
+| 22px | `22px` | `.detail-title` |
+| 26px | `26px` | `.identity-name` (desktop) |
+
+### Font Weights
+
+| Weight | Used In |
+|---|---|
+| `400` (normal) | Base body, not explicitly declared (inherited) |
+| `500` | `.section-row__label`, `.item-row__title`, `.link-row__name`, `.btn-primary` |
+| `600` | `.identity-name`, `.detail-title`, `.identity-avatar`, `.header-brand`, `.onboarding-title`, `.lock-title`, `.edit-modal__title`, `.profile-info__name` |
+| `700` | `.section-heading`, `.skill-group__label`, `.edit-field__label`, `.section-label`, `.detail-section__label` (label caps), `.tab-btn`, `strength-label` |
+
+### Line Heights
+
+| Value | Used In |
+|---|---|
+| `1.15` | `.identity-name` |
+| `1.25` | `.detail-title` |
+| `1.5` | Root default, `.identity-meta`, `.onboarding-sub`, `.lock-sub` |
+| `1.6` | `.share-note`, `.pwd-remove-note`, `.edit-textarea`, `.pwd-reset-desc` (1.65) |
+| `1.65` | `.identity-summary` (mobile), `.pwd-reset-desc` |
+| `1.7` | `.detail-section__body` |
+| `1.75` | `.identity-summary` |
+| `1.8` | `.detail-body` |
+
+### Letter Spacing
+
+| Value | Used In |
+|---|---|
+| `-0.02em` | `.identity-name` (tight negative — large display) |
+| `-0.015em` | `.detail-title` |
+| `0.01em` | `.header-brand` |
+| `0.05em` | `.identity-avatar`, `strength-label` |
+| `0.08em` | `.share-divider`, `.tab-btn` |
+| `0.1em` | `.edit-field__label` |
+| `0.12em` | `.section-heading`, `.section-label`, `.skill-group__label` |
+| `0.14em` | `.pwd-menu-section-label` |
+
+### Typography Roles
+
+| Role | Size | Weight | Color Token |
+|---|---|---|---|
+| **Display / Name** | 26px (mobile: 20px) | 600 | `--text-primary` |
+| **Section Title** | 22px | 600 | `--text-primary` |
+| **Heading Medium** | 18–20px | 600 | `--text-primary` |
+| **Heading Small** | 16px | 600 | `--text-primary` |
+| **Label Cap** | 9–11px | 700 | `--text-muted` |
+| **Body** | 14px | 400 | `--text-secondary` |
+| **Body Small** | 13px | 400 | `--text-secondary` |
+| **Metadata / Hint** | 11–12px | 400 | `--text-muted` |
+| **Navigation** | 13px | 600 | `--text-primary` |
+| **Tab Label** | 9px | 700 | `rgba(255,255,255,0.35)` / `#ffffff` |
+
+---
+
+## 3. 📏 SPACING SYSTEM
+
+### Token Scale (from `variables.css`)
+
+| Token | Value |
+|---|---|
+| `--sp-1` | `4px` |
+| `--sp-2` | `8px` |
+| `--sp-3` | `12px` |
+| `--sp-4` | `16px` |
+| `--sp-5` | `20px` |
+| `--sp-6` | `24px` |
+| `--sp-8` | `32px` |
+| `--sp-10` | `40px` |
+
+> **Note:** `--sp-7` and `--sp-9` are **missing** from the scale. This is a deliberate gap (no 28px or 36px step).
+
+### Raw Values Used Outside Token System
+
+| Value | Location |
+|---|---|
+| `3px` | `.section-row__left gap`, `.item-row__body gap`, `.lock-dots gap`, `.strength-bar-track gap` |
+| `4px` | `.pwd-menu gap`, `.pwd-menu-divider margin`, `.section-heading-row margin`, misc gaps |
+| `6px` | `.lock-dot size+gap`, `.detail-link-btn padding-top/bottom`, `.strength-bar-wrap margin-top` |
+| `14px` | Mobile section/item row padding top/bottom |
+| `88px` | Bottom padding on mobile content (tab bar clearance) — hardcoded |
+| `216px` | `.share-qr min-height` |
+| `200px` | `.parsing-bar-track width` |
+
+### Key Layout Spacings
+
+| Region | Spacing Used |
+|---|---|
+| Header horizontal padding | `--sp-6` (24px), mobile: `16px` |
+| Content top padding | `--sp-10` (40px), mobile: `20px` |
+| Content bottom padding | `--sp-10`, mobile: `88px` |
+| Content horizontal padding | `--sp-6`, mobile: `16px`–`18px` |
+| Section row padding | `--sp-4 0` (16px top/bottom), mobile: `14px 0` |
+| Item row padding | `--sp-4 0` (16px top/bottom), mobile: `14px 0` |
+| Identity block margin-bottom | `--sp-6`, mobile: `--sp-4` |
+| Detail sections gap | `--sp-8` |
+| Edit modal body padding | `--sp-6` |
+| Edit modal gap between fields | `--sp-4` |
+
+---
+
+## 4. 🧱 BORDER & SHAPE SYSTEM
+
+### Border Widths
+
+| Width | Usage |
+|---|---|
+| `1px` | **Universal** — every border in the system is 1px |
+| `2px` | `.pwd-error` left accent bar, `.pwd-remove-note` left bar, strength-bar segments |
+| `4px` | Scrollbar width and height |
+
+### Border Styles
+
+| Style | Usage |
+|---|---|
+| `solid` | All card, input, modal, row, tag borders |
+| `dashed` | `.drop-zone`, `.btn-add-group` |
+| `none` | Reset on `button` elements |
+
+### Border Colors by Token
+
+| Context | Token |
+|---|---|
+| Default cards, inputs, tags | `--border-default` (`#222222`) |
+| Dividers, row separators | `--border-subtle` (`#191919`) |
+| Focus states, scrollbar | `--border-accent` (`#383838`) |
+| Accent hover | `var(--accent)` |
+| Danger borders | `#3a2222` |
+
+### Border Radius Values
+
+| Token / Value | Usage |
+|---|---|
+| `--radius: 2px` | All inputs, tags (from reset.css) |
+| `--radius-sm: 1px` | Defined but **not used** in any current selector |
+| `2px` | Scrollbar thumb radius |
+| `50%` | `.lock-dot` (circles) |
+| `0` | Section rows, item rows (explicitly `border-radius: 0`) |
+
+### Shape Character
+
+- **Predominantly sharp/square**: The whole system defaults to `0` or `2px` radius.
+- `--radius-sm (1px)` is defined but unused.
+- Only the lock-screen dot is perfectly round (`50%`).
+- No card or panel uses a visible corner radius.
+- **Very consistent** — no rogue border-radii found.
+
+---
+
+## 5. 🎯 ICON SYSTEM
+
+### Icon Library
+
+**Lucide React** — imported per-component, no global icon registry.
+
+### Icon Sizes Used
+
+| Size | Used In |
+|---|---|
+| `12px` | Row action icons (Pencil, Trash2), detail-link-btn icons, btn-ghost icons |
+| `13px` | Header actions (Share2, Lock, LockOpen, RotateCcw), item-row arrow (ChevronRight), section-row (ChevronRight), identity-edit-btn (Pencil), btn-add icon (Plus) |
+| `14px` | Section-row ChevronRight |
+| `20px` | Mobile tab bar icons (Home, Share2, Settings2), header back button (ChevronLeft) |
+| Variable | `Globe`, `Video`, `ExternalLink` in detail links |
+
+### Stroke Width
+
+| Value | Usage |
+|---|---|
+| Default (`~2`) | All header/action icons |
+| `1.75` | Mobile tab bar icons (explicitly set for lighter appearance) |
+
+### Filled vs Outline
+All icons use **outline style** (Lucide default). No filled icon variants are used.
+
+### Icon Usage by Context
+
+| Context | Icons Used |
+|---|---|
+| Navigation | `ChevronLeft`, `ChevronRight` |
+| Header actions | `Share2`, `Lock`, `LockOpen`, `RotateCcw` |
+| Edit / CRUD | `Pencil`, `Trash2`, `Plus` |
+| Mobile tab bar | `Home`, `Share2`, `Settings2` |
+| Detail links | `Globe`, `Video`, `ExternalLink` |
+| Links section | `ExternalLink` (link rows) |
+| Auth | `Lock`, `LockOpen` |
+| QR / share error | Implied (no explicit icon named in code, just error state) |
+
+---
+
+## 6. 🧩 COMPONENT PATTERNS
+
+### Cards vs Lists
+- **No cards**. The system uses **horizontal list rows** throughout.
+- Even the detail view is a linear reading layout, not a card grid.
+- The only "surface" with a box is the edit modal bottom sheet.
+
+### Buttons
+
+| Class | Style | Used For |
+|---|---|---|
+| `.btn-primary` | Filled `--bg-active`, 1px border | Primary CTAs (Start Over, etc.) |
+| `.btn-ghost` | Transparent, 1px `--border-default` | Secondary actions, Cancel |
+| `.btn-ghost-danger` | Transparent, 1px `#3a2222`, text `#b05252` | Delete/destructive |
+| `.btn-icon` | Icon-only 28×28 square, no border | Header icon buttons |
+| `.btn-icon-sm` | Icon-only 22×22 | Inline icon action (small) |
+| `.btn-add` | Small text + icon, `--border-default` | Add item buttons in section headers |
+| `.btn-add-group` | Full-width dashed border | Add skill group |
+| `.btn-copy` | Text + icon, `--accent` color | Copy URL in share panel |
+| `.link-btn` | Inline text, `--accent` color, no border | Empty state links |
+| `.row-action-btn` | 24×24 invisible, hover reveals color | Edit/delete on rows |
+| `.identity-edit-btn` | 28×28, transparent border, hover shows | Profile edit trigger |
+| `.tab-btn` | Flex column, fill tab bar slot | Mobile nav tabs |
+
+> **Pattern**: No button has a visible background unless it's `.btn-primary`. All others are ghost or icon-only.
+
+### Inputs & Forms
+
+| Element | Style |
+|---|---|
+| `input`, `textarea` | `--bg-input`, 1px `--border-default`, focus → `--border-accent` |
+| `.edit-input` | Same, `--sp-2 --sp-3` padding, 13px font |
+| `.edit-textarea` | Same as edit-input, resizable vertically |
+| `.lock-input` | Same pattern, slightly different padding |
+| `.onboarding-textarea` | Fixed 100px height, 13px, same background pattern |
+
+> All inputs follow the exact same visual pattern. Very consistent.
+
+### Modals
+- **Edit modal**: bottom-sheet style (`align-items: flex-end`), slide-up animation, max 640px, 85vh max-height
+- **Share modal**: same overlay + sheet, narrower (max 380px), centered content inside
+- **Password modal**: same overlay + sheet pattern
+- All modals use `rgba(0,0,0,0.6)` scrim, `fadeIn 160ms` backdrop, `slideUpModal 220ms cubic-bezier(0.16,1,0.3,1)` content
+
+### Tags
+- `.tag`: `--bg-surface`, 1px `--border-default`, 11px text, `--text-secondary`, 3px 8px padding
+- Flat, small, no radius
+- Used in detail views for tech stacks, skills
+
+### Rows / Lists
+- `.section-row` — overview navigation rows (clickable, navigate forward)
+- `.item-row` — section content rows (clickable to detail + edit/delete actions)  
+- `.link-row` — links section rows (anchor tags)
+- All rows: `border-bottom: 1px --border-subtle`, `padding: --sp-4 0`, no background
+- First row gets `border-top` for visual enclosure
+
+### Overlays (Layers)
+- Level 0: `.overview-wrap` (base content)
+- Level 1: `.section-overlay` (z-index: 50) — slides over overview
+- Level 2: `.detail-overlay` (z-index: 100) — slides over section
+- Edit: `.edit-overlay` (z-index: 500)
+- Mobile: `.mobile-tab-bar` (z-index: 500)
+- Fullscreen: `.fullscreen-center` (z-index: 300) — auth/onboarding
+
+---
+
+## 7. 🧭 NAVIGATION MODEL
+
+### Model Type: **Progressive Disclosure / Flow-Based**
+
+No sidebar. No persistent tabs on desktop. Three levels of depth:
+
+```
+Level 0 — Overview (identity + section menu)
+  ↓ tap Section Row
+Level 1 — Section View (list of items for that section)
+  ↓ tap Item Row
+Level 2 — Detail View (full reading view for one item)
+```
+
+Back navigation via:
+- Header breadcrumb (click "MyProfile" → home, click section name → one level back)
+- Header back chevron (`ChevronLeft`) — visible on mobile when not at home
+- `animBack()` function handles exit animation before actual navigation
+
+**Mobile** (≤640px) adds a persistent **bottom tab bar** `{Home, Share, Settings}` that replaces modals with inline tab views.
+
+**Desktop** exposes share/lock/reset in the header-right area.
+
+---
+
+## 8. 🎬 INTERACTION SYSTEM
+
+### Animation Keyframes
+
+| Name | Effect | Duration | Easing |
+|---|---|---|---|
+| `fadeIn` | Opacity 0→1 | 200ms | `ease` |
+| `overviewIn` | Fade + translateY(10→0) | 260ms | `ease` |
+| `sectionIn` | translateX(32→0) + fade | 220ms | `cubic-bezier(0.16,1,0.3,1)` |
+| `sectionOut` | translateX(0→40) + fade | 160ms | `ease` |
+| `detailIn` | translateY(14→0) + scale(0.985→1) | 240ms | `cubic-bezier(0.16,1,0.3,1)` |
+| `detailOut` | translateY(0→10) + scale(1→0.99) | 140ms | `ease` |
+| `slideUpModal` | translateY(40→0) + fade | 220ms | `cubic-bezier(0.16,1,0.3,1)` |
+| `lockShake` | ±8px horizontal shake | 450ms | `ease` |
+| `parseProgress` | Width 0→100% | 1.8s | `ease-in-out` |
+
+### Transition Tokens
+
+| Token | Value | Used In |
+|---|---|---|
+| `--transition` | `150ms ease` | Default: colors, backgrounds, borders |
+| `--transition-slow` | `220ms ease` | Defined, not explicitly referenced in any class |
+
+### Hover Behaviors
+
+| Element | Hover Effect |
+|---|---|
+| `.section-row:hover .section-row__label` | Color → `--text-primary` |
+| `.section-row:hover .section-row__arrow` | Color → `--accent`, translateX(+3px) |
+| `.item-row:hover .item-row__title` | Color → `--text-primary` |
+| `.item-row:hover .item-row__arrow` | Color → `--accent`, translateX(+3px) |
+| `.item-row:hover .item-row__actions` | opacity 0 → 1 (reveal edit/delete) |
+| `.link-row:hover .link-row__name` | Color → `--text-primary` |
+| `.btn-icon:hover` | Color → `--text-secondary` |
+| `.btn-ghost:hover` | Background → `--bg-hover`, border → `--border-accent` |
+| `.btn-ghost-danger:hover` | Background dim red, border/text → `#e05252` |
+| `.detail-link-btn:hover` | Background → `--accent-dim`, border → `--accent` |
+| `.drop-zone:hover` | Background → `--bg-hover`, border → `--accent` |
+| `.pwd-menu-item:hover` | Background → `--bg-hover`, border/text upgrades |
+| `.tab-btn:active` | Opacity → 0.4 (no hover state on mobile) |
+
+---
+
+## 9. ⚠️ INCONSISTENCIES
+
+### Duplicate Styles / Token Violations
+
+| Issue | Detail |
+|---|---|
+| `--transition-slow` defined, never used | Token `220ms ease` declared in `:root` but zero references |
+| `--radius-sm (1px)` defined, never used | Radius token declared but no selector applies it |
+| `--text-inverse` defined, never used | Color token declared with no usage in the codebase |
+| `#141414` hardcoded in `.edit-modal` | Should be `var(--bg-input)` |
+| `#111111` hardcoded in `.share-qr` | Should be `var(--bg-surface)` |
+| `#b8956a` hardcoded in `.tab-btn--active::before` | Should be `var(--accent)` |
+| `#ffffff` hardcoded in `.tab-btn--active` | No token for white — should be `--text-primary` or a new token |
+| `rgba(12,12,12,0.98)` in mobile tab bar | Near-duplicate of `--bg-base` with opacity, no token |
+| `rgba(0,0,0,0.6)` overlay scrim | Hardcoded, no token |
+
+### Raw Pixel Values That Should Be Tokens
+
+| Value | Location | Suggested Token |
+|---|---|---|
+| `88px` | Mobile content padding-bottom | `--tab-bar-clear` |
+| `3px` | Row body gaps | `--sp-0.75` or use `--sp-1-` |
+| `6px` | Detail link btn padding | Between `--sp-1` and `--sp-2` |
+| `14px` | Mobile row padding | Between `--sp-3` and `--sp-4`, or same as `--sp-3.5` |
+
+### Structural Issues
+
+| Issue | Detail |
+|---|---|
+| No error/success color tokens | `#e05252`, `#b05252`, `#3a2222`, `#5aba8a` all hardcoded many times |
+| `.section-heading` defined twice | Lines 158–165 and lines 988–994 in `components.css` — second definition overwrites the margin-bottom of the first |
+| `.item-row` defined twice | Lines 173–182 and lines 1016–1025 — the second adds `position: relative` (necessary for actions overlay), but is a maintenance risk |
+| `--sp-7`, `--sp-9` missing | The spacing scale jumps `--sp-6 → --sp-8` and `--sp-8 → --sp-10`, leaving gaps |
+| `font-size: inherit` on inputs in reset.css, then explicitly set to `14px` | Minor specificity mismatch |
+| `mobile-back-btn` class applied in Header.jsx but not defined anywhere in CSS | Class name exists in JSX, no corresponding CSS rule found |
+
+### UI Drift
+
+| Area | Drift |
+|---|---|
+| Mobile content padding | `layout.css` sets `88px` bottom, `components.css @media` overrides to `24px` for the same selectors (`.overview-content`, `.section-content`, `.detail-content`) — conflict |
+| Header breadcrumb depth 2 | Uses inline `style={{}}` instead of a CSS class for the back-to-section button in detail view |
+| `share-modal-body gap` | Uses raw `20px` instead of `--sp-5` |
+| `pwd-reset-confirm gap` | Uses `12px` instead of `--sp-3` |
+| Overview edit button | Uses inline `style={{ flex:1, minWidth:0 }}` on Overview.jsx wrapper |
+
+---
+
+## 10. 🧠 FINAL SUMMARY
+
+### Design System Identity
+
+> **"Quiet Precision"** — A terminal-dark, information-focused UI with an extremely restrained palette, sharp geometry, and progressive disclosure navigation.
+
+### What Style This Represents
+
+| Trait | Description |
+|---|---|
+| **Theme** | Deep dark (`#0c0c0c` base) — not black, but near-obsidian |
+| **Mood** | Developer-credential / portfolio tool — focused, document-like |
+| **Accent** | Warm amber (`#b8956a`) — gives humanity/warmth to an otherwise cold dark UI |
+| **Shape** | Brutalist-adjacent — square corners, 1px uniform borders, no shadows |
+| **Density** | Medium-low — generous vertical padding on rows (16px), comfortable to scan |
+| **Motion** | Subtle & intentional — spring easing on forward navigation, linear on back |
+
+### What Is Working Well ✅
+
+- **Token architecture is solid** — all background, border, and text relationships are properly tokenized
+- **Typography hierarchy is clear** — 6 visual levels of text from 26px display down to 9px label caps
+- **Spacing is consistent** — almost all padding/margin uses `--sp-*` tokens
+- **Animation system is elegant** — directional transitions (in from right, out to right) create a natural spatial model
+- **Responsive breakpoints** — both `640px` (mobile) and `380px` (xs) are handled thoughtfully
+- **Component API is clean** — all components receive props with no internal state drift
+- **Icon system is singular** — only Lucide React, consistent stroke, no library mixing
+- **Row pattern is consistent** — all three row types (section, item, link) follow identical visual grammar
+
+### What Is Inconsistent / Needs Attention ⚠️
+
+| Priority | Issue |
+|---|---|
+| High | Error/success colors are hardcoded everywhere — need `--color-error`, `--color-success`, `--color-error-dim`, `--color-danger-border` tokens |
+| High | Two CSS selectors duplicated (`.section-heading`, `.item-row`) — risk of drift |
+| Medium | Mobile bottom padding conflict between `layout.css` and `components.css` — one wins, one is dead code |
+| Medium | Three unused tokens (`--text-inverse`, `--radius-sm`, `--transition-slow`) — dead weight |
+| Medium | Several hardcoded hex values inside tokenized contexts — should all be `var()` |
+| Low | Missing spacing scale steps (`--sp-7`, `--sp-9`) — minor but causes raw pixel fallbacks |
+| Low | `mobile-back-btn` class applied in JSX but undefined in CSS — may cause issues if that class is ever needed for mobile targeting |
+
+---
+
+*Audit complete. No changes made. This document represents the extracted truth of the current system.*
